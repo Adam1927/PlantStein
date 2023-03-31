@@ -1,0 +1,50 @@
+// Docs: https://www.dbml.org/docs
+
+// All temperature values in celsius
+
+Table plant {
+  species varchar [pk]
+  perfect_temperature integer
+  perfect_light_per_day decimal
+  perfect_humidity decimal
+  perfect_moisture decimal
+}
+
+Table room {
+  id integer [pk]
+}
+
+Table room_timeseries_data {
+  room_id integer
+  timestamp timestamp
+  temperature integer
+  brightness decimal
+  humidity decimal
+
+  indexes {
+      (room_id, timestamp) [pk]
+  }
+}
+
+Ref: room_timeseries_data.room_id > room.id
+
+// One plant of the user
+Table pot {
+  id integer [pk]
+  nickname varchar
+  room_id integer
+  plant varchar
+}
+
+Ref: pot.room_id > room.id
+Ref: pot.plant > plant.species
+
+Table pot_timeseries_data {
+  pot_id integer
+  timestamp timestamp
+  
+  moisture decimal
+}
+
+Ref: pot_timeseries_data.pot_id > pot.id
+
