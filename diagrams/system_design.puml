@@ -1,0 +1,39 @@
+@startuml System Design
+left to right direction
+
+component "Microcontroller"
+component "Temperature Sensor" as TemperatureSensor
+component "Temperature & Humidity Sensor" as TemperatureHumiditySensor
+component "Moisture Sensor" as MoistureSensor
+component "Light Sensor" as LightSensor
+component "RGB LED" as RGBLED
+component "Speaker" as Speaker
+
+component Server
+component App
+database Database
+
+TemperatureSensor <-- Microcontroller : Read data
+TemperatureHumiditySensor <-- Microcontroller : Read data
+MoistureSensor  <-- Microcontroller : Read data
+LightSensor <-- Microcontroller : Read data
+RGBLED <-- Microcontroller : Read data
+Speaker <-- Microcontroller : Read data
+
+Microcontroller --> Server : Transmit sensor data over MQTT
+note top of link
+  /temperature
+  /humidity
+  /moisture
+end note
+
+Server <--> Database
+    
+Server <--> App : Rest API
+
+Server ---> Microcontroller : Send alerts
+note top of link
+    /alert
+end note
+
+@enduml
