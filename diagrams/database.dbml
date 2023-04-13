@@ -2,8 +2,8 @@
 
 // All temperature values in celsius
 
-Table plant {
-  species varchar [pk]
+Table species {
+  name varchar [pk]
   perfect_temperature integer
   perfect_light_per_day decimal
   perfect_humidity decimal
@@ -29,15 +29,15 @@ Table room_timeseries_data {
 Ref: room_timeseries_data.room_id > room.id
 
 // One plant of the user
-Table pot {
+Table plant {
   id integer [pk]
   nickname varchar
   room_id integer
   plant varchar
 }
 
-Ref: pot.room_id > room.id
-Ref: pot.plant > plant.species
+Ref: plant.room_id > room.id
+Ref: plant.plant > species.name
 
 Table pot_timeseries_data {
   pot_id integer
@@ -46,5 +46,6 @@ Table pot_timeseries_data {
   moisture decimal
 }
 
-Ref: pot_timeseries_data.pot_id > pot.id
+Ref: pot_timeseries_data.pot_id > plant.id
+
 
