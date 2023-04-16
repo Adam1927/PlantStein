@@ -3,6 +3,12 @@
 This folder contains the code and documentation for the server and database.
 For now, the server uses a in-memory H2 database. Upon startup, Spring will add the data from `data.sql`.
 
+# Run this project
+To run this project, make sure to enable Annotation Processing if you're using IntelliJ (just press Shift two times and search for it).
+
+Also, make sure that you opened the `server` directory in IntelliJ, not the whole plant-stein reposity.
+Otherwise, IntelliJ won't recognize the Java project (automatically).
+
 ## Swagger UI
 
 This project uses Swagger UI to document the API.
