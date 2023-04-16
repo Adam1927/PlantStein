@@ -1,7 +1,7 @@
 package com.plantstein.server.rest;
 
-import com.plantstein.server.model.Pot;
-import com.plantstein.server.repository.PotRepository;
+import com.plantstein.server.model.Plant;
+import com.plantstein.server.repository.PlantRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,17 +13,17 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class ApplicationRestController {
-    private final PotRepository potRepository;
+    private final PlantRepository plantRepository;
 
-    @Operation(summary = "Get all pots", tags = { "pot" })
-    @GetMapping("/pots")
-    public List<Pot> getPots() {
-        return potRepository.findAll();
+    @Operation(summary = "Get all plants", tags = { "plant" })
+    @GetMapping("/plants")
+    public List<Plant> getPlants() {
+        return plantRepository.findAll();
     }
 
-    @Operation(summary = "Get pots by nickname", tags = { "pot" })
-    @GetMapping("/pots/nickname/{nickname}")
-    public List<Pot> getPotsByNickname(@PathVariable String nickname) {
-        return potRepository.findByNickname(nickname);
+    @Operation(summary = "Get plants by nickname", tags = { "plant" })
+    @GetMapping("/plants/nickname/{nickname}")
+    public List<Plant> getPlantsByNickname(@PathVariable String nickname) {
+        return plantRepository.findByNickname(nickname);
     }
 }
