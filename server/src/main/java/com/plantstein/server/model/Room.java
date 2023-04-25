@@ -20,4 +20,13 @@ public class Room {
 
     @OneToMany
     private List<Plant> plants;
+
+    @NotEmpty
+    private double Temperature;
+
+    @NotEmpty
+    private double Light;
+
+    @NotEmpty
+    private double Humidity;
 }

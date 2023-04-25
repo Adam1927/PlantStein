@@ -21,4 +21,7 @@ public class Plant {
 
     @ManyToOne(optional = false)
     private Room room;
+
+    @NotEmpty
+    private double Moisture;
 }
