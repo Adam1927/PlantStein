@@ -18,7 +18,7 @@ public class Species {
 private String name;
 
 @NotEmpty
-private int perfectTemperature;
+private double perfectTemperature;
 
 @NotEmpty
 private double perfectLight;
