@@ -19,49 +19,49 @@ public class PlantRestController {
 
     @Operation(summary = "Get all plants of user", tags = { "plant" })
     @GetMapping("/all")
-    public List<Plant> getAll() {
+    public List<Plant> getAll(@RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 
     @Operation(summary = "Get plants of user by nickname", tags = { "plant" })
     @GetMapping("/nickname/{nickname}")
-    public List<Plant> getByNickname(@PathVariable String nickname) {
+    public List<Plant> getByNickname(@PathVariable String nickname, @RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 
     @Operation(summary = "Get details of plant", tags = {"plant"})
     @GetMapping("/get/{id}")
-    public Plant getPlant(@PathVariable Long id) {
+    public Plant getPlant(@PathVariable Long id, @RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 
     @Operation(summary = "Add plant", tags = {"plant"})
     @PostMapping("/add")
-    public Plant addPlant(@ModelAttribute Plant plant) {
+    public Plant addPlant(@RequestBody Plant plant, @RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 
     @Operation(summary = "Rename plant", tags = {"plant"})
     @PutMapping("/rename/{id}/{newName}")
-    public Plant renamePlant(@PathVariable Long id, String newName) {
+    public Plant renamePlant(@PathVariable Long id, String newName, @RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 
     @Operation(summary = "Delete plant", tags = {"plant"})
     @DeleteMapping("/delete/{id}")
-    public Plant deletePlant(@PathVariable Long id) {
+    public Plant deletePlant(@PathVariable Long id, @RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 
     @Operation(summary = "Get condition", tags = {"plant"})
     @GetMapping("/condition/{id}")
-    public PlantConditionDTA getCondition(@PathVariable Long id) {
+    public PlantConditionDTA getCondition(@PathVariable Long id, @RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 
     @Operation(summary = "Get condition over time", tags = {"plant"})
     @GetMapping("/condition/{id}/{days}")
-    public List<PlantConditionDTA> getConditionOverTime(@PathVariable Long id, Integer days) {
+    public List<PlantConditionDTA> getConditionOverTime(@PathVariable Long id, Integer days, @RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 
