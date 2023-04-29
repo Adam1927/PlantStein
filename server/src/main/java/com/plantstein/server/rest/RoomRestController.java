@@ -6,61 +6,76 @@ import com.plantstein.server.model.Room;
 import com.plantstein.server.model.RoomId;
 import com.plantstein.server.repository.RoomRepository;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.cfg.NotYetImplementedException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * The rest controller for all room related requests.
+ */
 @RestController
 @RequestMapping("/room")
+@Tag(name = "Room")
 @RequiredArgsConstructor
 public class RoomRestController {
     private final RoomRepository roomRepository;
 
-    @Operation(summary = "Get all rooms of user", tags = {"room"})
+    @Operation(summary = "Get all rooms of user")
+    @ApiResponse(responseCode = "200", description = "List of rooms")
     @GetMapping("/all")
     public List<Room> getAll(@RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 
-    @Operation(summary = "Add a room", tags = {"room"})
+    @Operation(summary = "Add a room")
+    @ApiResponse(responseCode = "201", description = "Room added")
+    @ApiResponse(responseCode = "400", description = "Room already exists", content = @Content)
     @PostMapping("/add")
-    public Room add(@RequestBody String roomName, @RequestHeader String clientId) {
+    public ResponseEntity<Room> add(@RequestBody String roomName, @RequestHeader String clientId) {
         if(roomRepository.existsById(new RoomId(roomName, clientId))) {
             throw new AlreadyExistsException("Room already exists");
         }
 
-        return roomRepository.save(Room.builder()
+        return new ResponseEntity<>(roomRepository.save(Room.builder()
                 .name(roomName)
                 .clientId(clientId)
                 .build()
-        );
+        ), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Rename room", tags = {"room"})
+    @Operation(summary = "Rename room")
+    @ApiResponse(responseCode = "200", description = "Room renamed")
     @PutMapping("/rename/{id}/{newName}")
     public Room rename(@PathVariable Long id, @PathVariable String newName, @RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 
-    @Operation(summary = "Get current room condition", tags = {"room"})
+    @Operation(summary = "Get current room condition")
+    @ApiResponse(responseCode = "200", description = "Room condition object")
     @GetMapping("/condition/{id}")
     public RoomConditionDTA getCondition(@PathVariable Long id, @RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 
-    @Operation(summary = "Get room condition over time", tags = {"room"})
+    @Operation(summary = "Get room condition over time")
+    @ApiResponse(responseCode = "200", description = "List of room condition objects")
     @GetMapping("/condition/{id}/{days}")
     public List<RoomConditionDTA> getCondition(@PathVariable Long id, @PathVariable Integer days, @RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 
-    @Operation(summary = "Delete a room", tags = {"room"})
+    @Operation(summary = "Delete a room")
+    @ApiResponse(responseCode = "200", description = "Room deleted")
     @DeleteMapping("/delete/{id}")
     public Room delete(@PathVariable Long id, @RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
-
 
 }
