@@ -1,9 +1,9 @@
 package com.plantstein.server.rest;
 
-import com.plantstein.server.dto.RoomConditionDTA;
 import com.plantstein.server.exception.AlreadyExistsException;
 import com.plantstein.server.model.Room;
 import com.plantstein.server.model.RoomId;
+import com.plantstein.server.model.RoomTimeSeries;
 import com.plantstein.server.repository.RoomRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -39,13 +39,12 @@ public class RoomRestController {
     @ApiResponse(responseCode = "400", description = "Room already exists", content = @Content)
     @PostMapping("/add")
     public ResponseEntity<Room> add(@RequestBody String roomName, @RequestHeader String clientId) {
-        if(roomRepository.existsById(new RoomId(roomName, clientId))) {
+        if (roomRepository.existsById(new RoomId(roomName, clientId))) {
             throw new AlreadyExistsException("Room already exists");
         }
 
         return new ResponseEntity<>(roomRepository.save(Room.builder()
-                .name(roomName)
-                .clientId(clientId)
+                .roomId(new RoomId(roomName, clientId))
                 .build()
         ), HttpStatus.CREATED);
     }
@@ -60,14 +59,14 @@ public class RoomRestController {
     @Operation(summary = "Get current room condition")
     @ApiResponse(responseCode = "200", description = "Room condition object")
     @GetMapping("/condition/{id}")
-    public RoomConditionDTA getCondition(@PathVariable Long id, @RequestHeader String clientId) {
+    public RoomTimeSeries getCondition(@PathVariable Long id, @RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 
     @Operation(summary = "Get room condition over time")
     @ApiResponse(responseCode = "200", description = "List of room condition objects")
     @GetMapping("/condition/{id}/{days}")
-    public List<RoomConditionDTA> getCondition(@PathVariable Long id, @PathVariable Integer days, @RequestHeader String clientId) {
+    public List<RoomTimeSeries> getCondition(@PathVariable Long id, @PathVariable Integer days, @RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 

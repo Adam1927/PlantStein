@@ -1,7 +1,7 @@
 package com.plantstein.server.rest;
 
-import com.plantstein.server.dto.PlantConditionDTA;
 import com.plantstein.server.model.Plant;
+import com.plantstein.server.model.PlantTimeSeries;
 import com.plantstein.server.repository.PlantRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -75,7 +75,7 @@ public class PlantRestController {
     @ApiResponse(responseCode = "200", description = "Plant condition object")
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @GetMapping("/condition/{id}")
-    public PlantConditionDTA getCondition(@PathVariable Long id, @RequestHeader String clientId) {
+    public PlantTimeSeries getCondition(@PathVariable Long id, @RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 
@@ -84,7 +84,7 @@ public class PlantRestController {
     @ApiResponse(responseCode = "400", description = "Invalid number of days", content = @Content)
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @GetMapping("/condition/{id}/{days}")
-    public List<PlantConditionDTA> getConditionOverTime(@PathVariable Long id, @Positive Integer days, @RequestHeader String clientId) {
+    public List<PlantTimeSeries> getConditionOverTime(@PathVariable Long id, @Positive Integer days, @RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 
