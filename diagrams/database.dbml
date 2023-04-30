@@ -11,22 +11,17 @@ Table species {
 
 Table room {
   name varchar [pk]
-  user long
+  clientId varchar [pk]
+  
 }
 
-
-Ref: room.user > user.id
-
 Table room_timeseries_data {
-  room long
-  timestamp timestamp
+  room long [pk]
+  clientId varchar [pk]
+  timestamp timestamp [pk]
   temperature integer
   brightness decimal
   humidity decimal
-
-  indexes {
-      (room, timestamp) [pk]
-  }
 }
 
 Ref: room_timeseries_data.room > room.name
@@ -34,30 +29,27 @@ Ref: room_timeseries_data.room > room.name
 // One plant of the user
 Table plant {
   id long [pk]
+  clientId varchar [pk]
   nickname varchar
   room integer
   species varchar
 }
 
 Ref: plant.room > room.name
+Ref: plant.clientId > room.clientId
 Ref: plant.species > species.name
 
-Table pot_timeseries_data {
-  pot long 
+Table plant_timeseries_data {
+  plant long [pk]
+  clientId varchar [pk]
   timestamp timestamp
   moisture decimal
 
-indexes {
-      (pot, timestamp) [pk]
-  }
 
 }
 
-Ref: pot_timeseries_data.pot > plant.id
-
-Table user{
-  id long [pk]
-}
+Ref: plant_timeseries_data.plant > plant.id
+Ref: plant_timeseries_data.clientId > plant.clientId
 
 
 
