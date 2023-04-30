@@ -1,6 +1,7 @@
 package com.plantstein.server.rest;
 
 import com.plantstein.server.exception.AlreadyExistsException;
+import com.plantstein.server.model.Plant;
 import com.plantstein.server.model.Room;
 import com.plantstein.server.model.RoomId;
 import com.plantstein.server.model.RoomTimeSeries;
@@ -31,6 +32,14 @@ public class RoomRestController {
     @ApiResponse(responseCode = "200", description = "List of rooms")
     @GetMapping("/all")
     public List<Room> getAll(@RequestHeader String clientId) {
+        return roomRepository.findByClientId(clientId);
+    }
+
+    @Operation(summary = "Get plants in room")
+    @ApiResponse(responseCode = "200", description = "List of plants in room")
+    @ApiResponse(responseCode = "404", description = "Room does not exist", content = @Content)
+    @GetMapping("/{roomName}/plants")
+    public List<Plant> getPlantsInRoom(@PathVariable String roomName, @RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 
