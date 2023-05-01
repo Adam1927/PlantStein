@@ -41,7 +41,9 @@ public class RoomRestController {
     @ApiResponse(responseCode = "404", description = "Room does not exist", content = @Content)
     @GetMapping("/{roomName}/plants")
     public List<Plant> getPlantsInRoom(@PathVariable String roomName, @RequestHeader String clientId) {
-        throw new NotYetImplementedException();
+        return roomRepository.findById(new RoomId(roomName, clientId))
+                .orElseThrow(() -> new NotFoundException("Room does not exist"))
+                .getPlants();
     }
 
     @Operation(summary = "Add a room")
@@ -53,10 +55,13 @@ public class RoomRestController {
             throw new AlreadyExistsException("Room already exists");
         }
 
-        return new ResponseEntity<>(roomRepository.save(Room.builder()
+        Room newRoom = Room.builder()
                 .roomId(new RoomId(roomName, clientId))
-                .build()
-        ), HttpStatus.CREATED);
+                .build();
+
+        return new ResponseEntity<>(
+                roomRepository.save(newRoom),
+                HttpStatus.CREATED);
     }
 
     @Operation(summary = "Rename room")
