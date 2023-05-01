@@ -2,6 +2,8 @@ package com.plantstein.server.model;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +20,6 @@ public class PlantTimeSeries {
     private PlantTimeSeriesId plantTimeSeriesId;
 
     @NotEmpty
-    private double moisture;
-
+    @Enumerated(EnumType.ORDINAL)
+    private Moisture moisture;
 }
