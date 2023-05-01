@@ -12,6 +12,8 @@ before_script:
 build:
   stage: build
   script: gradle --build-cache assemble
+  tags:
+    - docker
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
