@@ -1,5 +1,6 @@
 package com.plantstein.server.mqtt;
 
+import com.plantstein.server.model.Plant;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,7 @@ import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.integration.mqtt.support.MqttHeaders;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
+
 
 @Configuration
 public class MQTTBeans {
@@ -49,8 +51,18 @@ public class MQTTBeans {
     public MessageHandler handler() {
         return message -> {
             String topic = message.getHeaders().get(MqttHeaders.RECEIVED_TOPIC).toString();
-            if (topic.equals("myTopic")) {
-                System.out.println("This is our topic");
+            if (topic.equals("temperature")) {
+                System.out.println("This is the current temperature");
+            }
+            else if (topic.equals("humidity")){
+                System.out.println("This is the current humidity");
+            }
+            else if (topic.equals("moisture")){
+                System.out.println("This is the current moisture");
+
+            }
+            else if (topic.equals("light")){
+                System.out.println("This is the current brightness level");
             }
             System.out.println(message.getPayload());
         };
