@@ -3,6 +3,7 @@
 
 # Simply checks if the project can be built.
 
+# use the gradle docker image to make sure that gradle is installed on the machien
 image: gradle:alpine
 
 before_script:
@@ -11,12 +12,14 @@ before_script:
 
 build:
   stage: build
-  script: gradle --build-cache assemble
+  script:
+    - cd server # go into server directory, as this is the entry point for the pipeline
+    - gradle --build-cache assemble
   tags:
     - docker
   cache:
     key: "$CI_COMMIT_REF_NAME"
-    policy: push
+    policy: push # execute this pipeline when something is pushed to the repo
     paths:
       - build
       - .gradle
