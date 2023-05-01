@@ -19,7 +19,7 @@ build:
     - docker
   cache:
     key: "$CI_COMMIT_REF_NAME"
-    policy: push # execute this pipeline when something is pushed to the repo
+    policy: push
     paths:
-      - build
-      - .gradle
+      - server/build/
+      - server/.gradle/
