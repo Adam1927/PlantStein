@@ -1,32 +1,29 @@
 package com.plantstein.server.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 
 @Entity
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Room {
-    @Id
-    private String name;
 
-    @ManyToOne(optional = false)
-    private Person person;
+    @EmbeddedId
+    private RoomId roomId;
 
     @OneToMany
     private List<Plant> plants;
 
-    @NotEmpty
-    private double Temperature;
-
-    @NotEmpty
-    private double Light;
-
-    @NotEmpty
-    private double Humidity;
+    @OneToMany
+    private List<RoomTimeSeries> roomTimeSeries;
 }

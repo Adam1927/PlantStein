@@ -1,7 +1,6 @@
 // Docs: https://www.dbml.org/docs
 
 // All temperature values in celsius
-
 Table species {
   name varchar [pk]
   perfect_temperature integer
@@ -11,41 +10,51 @@ Table species {
 }
 
 Table room {
-  id integer [pk]
+  name varchar [pk]
+  clientId varchar [pk]
+  
 }
 
 Table room_timeseries_data {
-  room_id integer
-  timestamp timestamp
+  room long [pk]
+  clientId varchar [pk]
+  timestamp timestamp [pk]
   temperature integer
   brightness decimal
   humidity decimal
-
-  indexes {
-      (room_id, timestamp) [pk]
-  }
 }
 
-Ref: room_timeseries_data.room_id > room.id
+Ref: room_timeseries_data.room > room.name
 
 // One plant of the user
 Table plant {
-  id integer [pk]
+  id long [pk]
+  clientId varchar [pk]
   nickname varchar
-  room_id integer
-  plant varchar
+  room integer
+  species varchar
 }
 
-Ref: plant.room_id > room.id
-Ref: plant.plant > species.name
+Ref: plant.room > room.name
+Ref: plant.clientId > room.clientId
+Ref: plant.species > species.name
 
-Table pot_timeseries_data {
-  pot_id integer
+Table plant_timeseries_data {
+  plant long [pk]
+  clientId varchar [pk]
   timestamp timestamp
-  
   moisture decimal
+
+
 }
 
-Ref: pot_timeseries_data.pot_id > plant.id
+Ref: plant_timeseries_data.plant > plant.id
+Ref: plant_timeseries_data.clientId > plant.clientId
+
+
+
+
+
+
 
 

@@ -2,23 +2,23 @@ package com.plantstein.server.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 
 @Entity
-@Getter
-@Setter
-
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Species {
 
 @Id
 private String name;
 
 @NotEmpty
-private int perfectTemperature;
+private double perfectTemperature;
 
 @NotEmpty
 private double perfectLight;
