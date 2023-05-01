@@ -14,8 +14,12 @@ import java.util.List;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, RoomId> {
-    @Query("select r from Room r where r.roomTimeSeries is not empty")
-    List<RoomTimeSeries> getTimeSeriesData(Room room);
+
+    @Query("select r from Room r where r.roomId.clientId = ?1")
+    List<Room> findByClientId(String clientId);
+
+    @Query("select r from Room r where r.roomId = ?1")
+    List<RoomTimeSeries> getTimeSeriesData(RoomId roomId);
 
     @Transactional
     @Modifying

@@ -63,6 +63,14 @@ public class PlantRestController {
         throw new NotYetImplementedException();
     }
 
+    @Operation(summary = "Change room of plant")
+    @ApiResponse(responseCode = "200", description = "Plant moved into new room")
+    @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
+    @PutMapping("/change-room/{plantId}/{newRoomName}")
+    public Plant changeRoom(@PathVariable Long plantId, @PathVariable String newRoomName, @RequestHeader String clientId) {
+        throw new NotYetImplementedException();
+    }
+
     @Operation(summary = "Delete plant")
     @ApiResponse(responseCode = "200", description = "Plant deleted")
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
