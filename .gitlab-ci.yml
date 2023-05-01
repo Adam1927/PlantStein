@@ -1,22 +1,2 @@
-# Based on:
-# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Gradle.gitlab-ci.yml
-
-# Simply checks if the project can be built.
-
-image: gradle:alpine
-
-before_script:
-  - GRADLE_USER_HOME="$(pwd)/.gradle"
-  - export GRADLE_USER_HOME
-
-build:
-  stage: build
-  script: gradle --build-cache assemble
-  tags:
-    - docker
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: push
-    paths:
-      - build
-      - .gradle
+include:
+  - "/server/pipeline.yml"
