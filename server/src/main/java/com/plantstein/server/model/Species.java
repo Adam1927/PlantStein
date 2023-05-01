@@ -1,5 +1,6 @@
 package com.plantstein.server.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
@@ -14,19 +15,20 @@ import java.util.List;
 @AllArgsConstructor
 public class Species {
 
-@Id
-private String name;
+    @Id
+    private String name;
 
-@NotEmpty
-private double perfectTemperature;
+    @NotEmpty
+    private double perfectTemperature;
 
-@NotEmpty
-private double perfectLight;
+    @NotEmpty
+    private double perfectLight;
 
-@NotEmpty
-private double perfectHumidity;
+    @NotEmpty
+    private double perfectHumidity;
 
-@OneToMany
-private List<Plant> plants;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Plant> plants;
 
 }
