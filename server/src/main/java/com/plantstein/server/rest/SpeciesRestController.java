@@ -1,6 +1,7 @@
 package com.plantstein.server.rest;
 
 
+import com.plantstein.server.exception.NotFoundException;
 import com.plantstein.server.model.Species;
 import com.plantstein.server.repository.SpeciesRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,9 +37,10 @@ public class SpeciesRestController {
     @Operation(summary = "Get species by ID")
     @ApiResponse(responseCode = "200", description = "Species with that ID")
     @ApiResponse(responseCode = "404", description = "Species with that ID not found", content = @Content)
-    @GetMapping("/get/{id}")
-    public Species getSpecies(@PathVariable String id) {
-        throw new NotYetImplementedException();
+    @GetMapping("/get/{name}")
+    public Species getSpecies(@PathVariable String name) {
+        return speciesRepository.findById(name)
+                .orElseThrow(() -> new NotFoundException("Species " + name + " does not exist"));
     }
 
 }
