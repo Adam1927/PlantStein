@@ -14,6 +14,7 @@ import java.util.List;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, RoomId> {
+
     @Query("select r from Room r where r.roomId.clientId = ?1")
     List<Room> findByClientId(String clientId);
 

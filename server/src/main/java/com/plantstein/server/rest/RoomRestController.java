@@ -15,6 +15,7 @@ import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.webjars.NotFoundException;
 
 import java.util.List;
 
@@ -40,7 +41,9 @@ public class RoomRestController {
     @ApiResponse(responseCode = "404", description = "Room does not exist", content = @Content)
     @GetMapping("/{roomName}/plants")
     public List<Plant> getPlantsInRoom(@PathVariable String roomName, @RequestHeader String clientId) {
-        throw new NotYetImplementedException();
+        return roomRepository.findById(new RoomId(roomName, clientId))
+                .orElseThrow(() -> new NotFoundException("Room does not exist"))
+                .getPlants();
     }
 
     @Operation(summary = "Add a room")
@@ -52,17 +55,27 @@ public class RoomRestController {
             throw new AlreadyExistsException("Room already exists");
         }
 
-        return new ResponseEntity<>(roomRepository.save(Room.builder()
+        Room newRoom = Room.builder()
                 .roomId(new RoomId(roomName, clientId))
-                .build()
-        ), HttpStatus.CREATED);
+                .build();
+
+        return new ResponseEntity<>(
+                roomRepository.save(newRoom),
+                HttpStatus.CREATED);
     }
 
     @Operation(summary = "Rename room")
     @ApiResponse(responseCode = "200", description = "Room renamed")
-    @PutMapping("/rename/{id}/{newName}")
-    public Room rename(@PathVariable Long id, @PathVariable String newName, @RequestHeader String clientId) {
-        throw new NotYetImplementedException();
+    @ApiResponse(responseCode = "404", description = "Room does not exist", content = @Content)
+    @PutMapping("/rename/{roomName}/{newName}")
+    public Room rename(@PathVariable String roomName, @PathVariable String newName, @RequestHeader String clientId) {
+        if (!roomRepository.existsById(new RoomId(roomName, clientId))) {
+            throw new NotFoundException("Room " + roomName + " does not exist");
+        }
+
+        roomRepository.updateRoomName(roomName, clientId, newName);
+
+        return roomRepository.findById(new RoomId(newName, clientId)).orElseThrow();
     }
 
     @Operation(summary = "Get current room condition")
@@ -81,9 +94,15 @@ public class RoomRestController {
 
     @Operation(summary = "Delete a room")
     @ApiResponse(responseCode = "200", description = "Room deleted")
-    @DeleteMapping("/delete/{id}")
-    public Room delete(@PathVariable Long id, @RequestHeader String clientId) {
-        throw new NotYetImplementedException();
+    @ApiResponse(responseCode = "404", description = "Room does not exist", content = @Content)
+    @DeleteMapping("/delete/{roomName}")
+    public Room delete(@PathVariable String roomName, @RequestHeader String clientId) {
+        Room room = roomRepository.findById(new RoomId(roomName, clientId))
+                .orElseThrow(() -> new NotFoundException("Room " + roomName + " does not exist"));
+
+        roomRepository.deleteById(new RoomId(roomName, clientId));
+
+        return room;
     }
 
 }

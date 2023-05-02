@@ -1,5 +1,6 @@
 package com.plantstein.server.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ public class Plant {
     @ManyToOne(optional = false)
     private Room room;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<PlantTimeSeries> plantTimeSeries;
 }
