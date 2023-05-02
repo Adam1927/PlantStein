@@ -6,8 +6,15 @@
 
 #include <rpcWiFi.h>
 #include "WiFi.h"
-#include"TFT_eSPI.h"
+#include "TFT_eSPI.h"
 #include <PubSubClient.h>
+#include "DHT.h"
+#include <string.h>
+
+#define DHTTYPE DHT11
+#define DHTPIN D3
+DHT dht(DHTPIN, DHTTYPE); 
+
 
 const char* ssid = SSID; // WiFi Name
 const char* password = PASSWORD;  // WiFi Password
@@ -19,12 +26,35 @@ PubSubClient client(wioClient);
 long lastMsg = 0;
 char moistureMsg[50];
 char lightMsg[50];
-int value = 0;
+char humidityMsg[50];
+char tempMsg[50];
+char moisturePublish[50];
+char lightPublish[50];
+char humidityPublish[50];
+char tempPublish[50];
+
 
 int moisturePin = A0;
 int lightPin = A1;
+int ledPin = D1;
+int speakerPin = D2;
+int humidityTempPin = D3;
 int moistureValue = 0;
 int lightValue = 0;
+int ledValue = 0;
+int speakerValue = 0;
+float humidityValue = 0;
+float tempValue = 0;
+
+#if defined(ARDUINO_ARCH_AVR)
+    #define debug  Serial
+
+#elif defined(ARDUINO_ARCH_SAMD) ||  defined(ARDUINO_ARCH_SAM)
+    #define debug  SerialUSB
+#else
+    #define debug  Serial
+#endif
+
 
 void setup_wifi() {
 
@@ -107,6 +137,10 @@ void setup() {
   tft.fillScreen(TFT_BLACK);
   tft.setRotation(3);
 
+  Wire.begin();
+  pinMode(humidityTempPin, INPUT);
+  digitalWrite(humidityTempPin, 1);
+  dht.begin();
 
   Serial.println();
   Serial.begin(115200);
@@ -128,18 +162,37 @@ void loop() {
 
     moistureValue = analogRead(moisturePin);
     lightValue = analogRead(lightPin);
-
+    humidityValue = dht.readHumidity();
+    tempValue = dht.readTemperature();
+    
     snprintf (moistureMsg, 50, "Moisture: %ld", moistureValue);
     snprintf (lightMsg, 50, "Light: %ld", lightValue);
+    snprintf (humidityMsg, 50, "Humidity: %.2f %%", humidityValue);
+    snprintf (tempMsg, 50, "Temperature: %.2f \*C", tempValue);
+
+    snprintf (moisturePublish, 50, "%ld", moistureValue);
+    snprintf (lightPublish, 50, "%ld", lightValue);
+    snprintf (humidityPublish, 50, "%f", humidityValue);
+    snprintf (tempPublish, 50, "%f", tempValue);
+
     Serial.println(moistureMsg);
-    client.publish("SensorData", moistureMsg);
     Serial.println(lightMsg);
-    client.publish("SensorData", lightMsg);
+    Serial.println(humidityMsg);
+    Serial.println(tempMsg);
+
+    client.publish("moisture", moisturePublish);
+    client.publish("light", lightPublish);
+    client.publish("humidity", humidityPublish);
+    client.publish("temperature", tempPublish);
 
     tft.fillScreen(TFT_BLACK);
-    tft.setCursor(0, 60);
+    tft.setCursor(0, 48);
     tft.print(moistureMsg);
-    tft.setCursor(0, 180);
+    tft.setCursor(0, 96);
     tft.print(lightMsg);
+    tft.setCursor(0, 144);
+    tft.print(humidityMsg);
+    tft.setCursor(0, 192);
+    tft.print(tempMsg);
   }
 }
