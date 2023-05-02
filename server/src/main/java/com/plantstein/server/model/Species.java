@@ -26,9 +26,6 @@ private double perfectLight;
 @NotEmpty
 private double perfectHumidity;
 
-@NotEmpty
-private double perfectMoisture;
-
 @OneToMany
 private List<Plant> plants;
 

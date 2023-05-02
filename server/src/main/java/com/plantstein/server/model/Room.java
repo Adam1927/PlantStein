@@ -26,6 +26,4 @@ public class Room {
 
     @OneToMany
     private List<RoomTimeSeries> roomTimeSeries;
-
-
 }
