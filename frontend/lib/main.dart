@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_stein/add_room.dart';
 import 'room_page.dart';
 
 void main() {
@@ -40,7 +41,7 @@ class _RootPageState extends State<RootPage> {
         centerTitle: true,
         backgroundColor: const Color(0xFFEBEDEB),
       ),
-      body: const RoomPage(),
+      body: const AddRoomPage(),
       backgroundColor: const Color(0xFFEBEDEB),
       bottomNavigationBar: NavigationBar(
         destinations: const [
