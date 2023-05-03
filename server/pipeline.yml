@@ -10,7 +10,6 @@ build-server:
   image: gradle:alpine
   stage: build 
   script:
-    - cd ~
     - GRADLE_USER_HOME="$(pwd)/.gradle"
     - export GRADLE_USER_HOME
     - cd server # go into server directory, as this is the entry point for the pipeline
