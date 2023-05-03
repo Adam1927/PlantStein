@@ -4,15 +4,15 @@
 # Simply checks if the project can be built.
 
 # use the gradle docker image to make sure that gradle is installed on the machien
-image: gradle:alpine
 
-before_script:
-  - GRADLE_USER_HOME="$(pwd)/.gradle"
-  - export GRADLE_USER_HOME
 
 build-server:
+  image: gradle:alpine
   stage: build 
   script:
+    - cd ~
+    - GRADLE_USER_HOME="$(pwd)/.gradle"
+    - export GRADLE_USER_HOME
     - cd server # go into server directory, as this is the entry point for the pipeline
     - gradle --build-cache assemble
   tags:
