@@ -1,0 +1,24 @@
+# Based on:
+# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Gradle.gitlab-ci.yml
+
+# Simply checks if the project can be built.
+
+# use the gradle docker image to make sure that gradle is installed on the machien
+
+
+build-server:
+  image: gradle:alpine
+  stage: build 
+  script:
+    - GRADLE_USER_HOME="$(pwd)/.gradle"
+    - export GRADLE_USER_HOME
+    - cd server # go into server directory, as this is the entry point for the pipeline
+    - gradle --build-cache assemble
+  tags:
+    - docker
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: push
+    paths:
+      - server/build/
+      - server/.gradle/
