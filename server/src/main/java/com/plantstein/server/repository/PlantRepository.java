@@ -23,6 +23,13 @@ public interface PlantRepository extends JpaRepository<Plant, Long> {
     @Query("select p from Plant p where p.room.roomId.clientId = ?2 and p.nickname = ?1")
     List<Plant> findByClientIdAndNickname(String nickname, String clientId);
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE Plant p SET p.room.roomId.name = ?2 WHERE p.id = ?1")
+    Integer updatePlantRoom(Long id, String newRoom);
 
-
+    @Transactional
+    @Modifying
+    @Query("UPDATE Plant p SET p.nickname = ?2 WHERE p.id = ?1")
+    Integer updatePlantName(Long id, String newName);
 }

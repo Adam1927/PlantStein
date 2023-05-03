@@ -75,8 +75,11 @@ public class PlantRestController {
     @ApiResponse(responseCode = "200", description = "Plant renamed")
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @PutMapping("/rename/{id}/{newName}")
-    public Plant renamePlant(@PathVariable Long id, String newName) {
-        throw new NotYetImplementedException();
+    public Plant renamePlant(@PathVariable Long id, @PathVariable String newName) {
+        if (!plantRepository.existsById(id)) throw new NotFoundException("Plant " + id + " does not exist");
+
+        plantRepository.updatePlantName(id, newName);
+        return plantRepository.findById(id).orElseThrow();
     }
 
     @Operation(summary = "Change room of plant")
@@ -84,7 +87,10 @@ public class PlantRestController {
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @PutMapping("/change-room/{plantId}/{newRoomName}")
     public Plant changeRoom(@PathVariable Long plantId, @PathVariable String newRoomName) {
-        throw new NotYetImplementedException();
+        if (!plantRepository.existsById(plantId)) throw new NotFoundException("Plant " + plantId + " does not exist");
+
+        plantRepository.updatePlantRoom(plantId, newRoomName);
+        return plantRepository.findById(plantId).orElseThrow();
     }
 
     @Operation(summary = "Delete plant")
