@@ -1,13 +1,20 @@
 package com.plantstein.server.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Plant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +28,8 @@ public class Plant {
 
     @ManyToOne(optional = false)
     private Room room;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<PlantTimeSeries> plantTimeSeries;
 }
