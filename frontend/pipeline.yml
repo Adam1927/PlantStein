@@ -1,7 +1,7 @@
 image: instrumentisto/flutter
 
-build:
-  stage: build
+build-app:
+  stage: build-app
   script:
     - cd frontend 
     - flutter build apk

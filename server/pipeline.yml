@@ -10,8 +10,8 @@ before_script:
   - GRADLE_USER_HOME="$(pwd)/.gradle"
   - export GRADLE_USER_HOME
 
-build:
-  stage: build
+build-server:
+  stage: build-server 
   script:
     - cd server # go into server directory, as this is the entry point for the pipeline
     - gradle --build-cache assemble
