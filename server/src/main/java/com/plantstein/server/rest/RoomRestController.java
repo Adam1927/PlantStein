@@ -1,10 +1,8 @@
 package com.plantstein.server.rest;
 
 import com.plantstein.server.exception.AlreadyExistsException;
-import com.plantstein.server.model.Plant;
-import com.plantstein.server.model.Room;
-import com.plantstein.server.model.RoomId;
-import com.plantstein.server.model.RoomTimeSeries;
+import com.plantstein.server.exception.NotFoundException;
+import com.plantstein.server.model.*;
 import com.plantstein.server.repository.RoomRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,7 +13,7 @@ import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.webjars.NotFoundException;
+
 
 import java.util.List;
 
@@ -64,6 +62,7 @@ public class RoomRestController {
                 roomRepository.save(newRoom),
                 HttpStatus.CREATED);
     }
+
 
     @Operation(summary = "Rename room")
     @ApiResponse(responseCode = "200", description = "Room renamed")

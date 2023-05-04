@@ -1,9 +1,11 @@
 package com.plantstein.server.rest;
 
+import com.plantstein.server.dto.ConditionsDTO;
 import com.plantstein.server.dto.NewPlantDTO;
-import com.plantstein.server.exception.AlreadyExistsException;
 import com.plantstein.server.exception.NotFoundException;
-import com.plantstein.server.model.*;
+import com.plantstein.server.model.Plant;
+import com.plantstein.server.model.PlantTimeSeries;
+import com.plantstein.server.model.RoomId;
 import com.plantstein.server.repository.PlantRepository;
 import com.plantstein.server.repository.RoomRepository;
 import com.plantstein.server.repository.SpeciesRepository;
@@ -11,7 +13,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.cfg.NotYetImplementedException;
@@ -74,7 +75,7 @@ public class PlantRestController {
     @ApiResponse(responseCode = "200", description = "Plant renamed")
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @PutMapping("/rename/{id}/{newName}")
-    public Plant renamePlant(@PathVariable Long id, String newName, @RequestHeader String clientId) {
+    public Plant renamePlant(@PathVariable Long id, String newName) {
         throw new NotYetImplementedException();
     }
 
@@ -82,7 +83,7 @@ public class PlantRestController {
     @ApiResponse(responseCode = "200", description = "Plant moved into new room")
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @PutMapping("/change-room/{plantId}/{newRoomName}")
-    public Plant changeRoom(@PathVariable Long plantId, @PathVariable String newRoomName, @RequestHeader String clientId) {
+    public Plant changeRoom(@PathVariable Long plantId, @PathVariable String newRoomName) {
         throw new NotYetImplementedException();
     }
 
@@ -90,15 +91,18 @@ public class PlantRestController {
     @ApiResponse(responseCode = "200", description = "Plant deleted")
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @DeleteMapping("/delete/{id}")
-    public Plant deletePlant(@PathVariable Long id, @RequestHeader String clientId) {
-        throw new NotYetImplementedException();
+    public Plant deletePlant(@PathVariable Long id) {
+        Plant plant = plantRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Plant " + id + " does not exist"));
+        plantRepository.deleteById(id);
+        return plant;
     }
 
     @Operation(summary = "Get condition")
     @ApiResponse(responseCode = "200", description = "Plant condition object")
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @GetMapping("/condition/{id}")
-    public PlantTimeSeries getCondition(@PathVariable Long id, @RequestHeader String clientId) {
+    public ConditionsDTO getCondition(@PathVariable Long id, @RequestHeader String clientId) {
         throw new NotYetImplementedException();
     }
 
