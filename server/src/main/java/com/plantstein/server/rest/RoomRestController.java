@@ -39,9 +39,10 @@ public class RoomRestController {
     @ApiResponse(responseCode = "404", description = "Room does not exist", content = @Content)
     @GetMapping("/{roomName}/plants")
     public List<Plant> getPlantsInRoom(@PathVariable String roomName, @RequestHeader String clientId) {
-        return roomRepository.findById(new RoomId(roomName, clientId))
-                .orElseThrow(() -> new NotFoundException("Room does not exist"))
-                .getPlants();
+        roomRepository.findById(new RoomId(roomName, clientId))
+                .orElseThrow(() -> new NotFoundException("Room does not exist"));
+        
+        return roomRepository.getPlantsInRoom(new RoomId(roomName, clientId));
     }
 
     @Operation(summary = "Add a room")
