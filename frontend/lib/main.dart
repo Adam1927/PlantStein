@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'room_page.dart';
+import 'bottom_navigation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,19 +43,7 @@ class _RootPageState extends State<RootPage> {
       ),
       body: const RoomPage(),
       backgroundColor: const Color(0xFFEBEDEB),
-      bottomNavigationBar: NavigationBar(
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.settings), label: ''),
-          NavigationDestination(icon: Icon(Icons.list), label: ''),
-          NavigationDestination(icon: Icon(Icons.home), label: ''),
-        ],
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPage = index;
-          });
-        },
-        selectedIndex: currentPage,
-      ),
+      bottomNavigationBar: const BottomNavigation(),
     );
   }
 }
