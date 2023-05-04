@@ -1,5 +1,6 @@
 package com.plantstein.server.repository;
 
+import com.plantstein.server.model.Plant;
 import com.plantstein.server.model.Room;
 import com.plantstein.server.model.RoomId;
 import com.plantstein.server.model.RoomTimeSeries;
@@ -20,6 +21,10 @@ public interface RoomRepository extends JpaRepository<Room, RoomId> {
 
     @Query("select r from Room r where r.roomId = ?1")
     List<RoomTimeSeries> getTimeSeriesData(RoomId roomId);
+
+
+    @Query("select p from Plant p where p.room.roomId = ?1")
+    List<Plant> getPlantsInRoom(RoomId roomId);
 
     @Transactional
     @Modifying
