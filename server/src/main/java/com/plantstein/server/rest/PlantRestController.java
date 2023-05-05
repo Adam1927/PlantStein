@@ -62,6 +62,12 @@ public class PlantRestController {
     @ApiResponse(responseCode = "400", description = "Invalid plant data", content = @Content)
     @PostMapping("/add")
     public ResponseEntity<Plant> addPlant(@RequestBody NewPlantDTO plantDTO, @RequestHeader String clientId) {
+        if (!roomRepository.existsById(new RoomId(plantDTO.getRoomName(), clientId))) {
+            throw new NotFoundException("Room " + plantDTO.getRoomName() + " does not exist");
+        }
+        if (!speciesRepository.existsById(plantDTO.getSpecies())){
+            throw new NotFoundException("Species " + plantDTO.getSpecies().toString() + " does not exist");
+        }
         Plant plant = Plant.builder()
                 .nickname(plantDTO.getNickname())
                 .species(speciesRepository.findById(plantDTO.getSpecies()).get())
