@@ -3,7 +3,7 @@
 
 # Simply checks if the project can be built.
 
-# use the gradle docker image to make sure that gradle is installed on the machien
+# use the gradle docker image to make sure that gradle is installed on the machine
 
 build-server:
   image: gradle:alpine
@@ -22,14 +22,19 @@ build-server:
       - server/build/
       - server/.gradle/
 
+# Based on:
+# https://www.youtube.com/watch?v=H0WiDqhDIOs
+
 server_code_tests:
   stage: test
-  image:
-    name: postman/newman_alpine33
-    entrypoint: [""]
+  image: gradle:alpine
   script: 
-    - newman --version
-    - npm install -g newman-reporter-html
+    - GRADLE_USER_HOME="$(pwd)/.gradle"
+    - export GRADLE_USER_HOME
+    - cd server 
+    - gradle --build-cache assemble
+    - apk add --update npm
+    - npm install -g newman newman-reporter-html
     - newman run server.test_collection.json reporters cli,html --reporter-html-export report.html
   artifacts:
     paths: 
