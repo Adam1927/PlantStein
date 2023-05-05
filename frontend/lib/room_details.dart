@@ -2,7 +2,9 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:plant_stein/utils.dart';
 import 'bottom_navigation.dart';
 import 'pot_details.dart';
 import 'package:http/http.dart' as http;
@@ -16,18 +18,19 @@ class RoomDetails extends StatefulWidget {
 }
 
 class _RoomDetailsState extends State<RoomDetails> {
-  List<String> pots = [];
+  List<Map<String, dynamic>> pots = [];
+
+  @override
+  void initState() {
+    super.initState();
+    debugPrint("initState");
+    // load pots only once (when widget is created)
+    loadPots(widget.room);
+  }
 
   @override
   Widget build(BuildContext context) {
-    getPots(widget.room);
-    int potNumber = pots.length;
-    pots.addAll(List.filled(9 - potNumber, ''));
-    List<bool> visiblePots = List.filled(9, false);
-
-    for (int i = 0; i < potNumber; i++) {
-      visiblePots[i] = true;
-    }
+    debugPrint("build");
 
     return Scaffold(
         appBar: AppBar(
@@ -42,126 +45,30 @@ class _RoomDetailsState extends State<RoomDetails> {
           backgroundColor: const Color(0xFFEBEDEB),
         ),
         bottomNavigationBar: const BottomNavigation(),
-        body: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: 30),
-            Text(
-              widget.room,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.playfairDisplay(
-                  color: Colors.black,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 30),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                potButton(pots[0], visiblePots[0]),
-                potButton(pots[1], visiblePots[1]),
-                potButton(pots[2], visiblePots[2]),
-              ],
-            ),
-            Image.asset('images/shelf.png'),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  width: 60,
-                ),
-                potTitle(pots[0], visiblePots[0]),
-                const SizedBox(
-                  width: 60,
-                ),
-                potTitle(pots[1], visiblePots[1]),
-                const SizedBox(
-                  width: 60,
-                ),
-                potTitle(pots[2], visiblePots[2]),
-                const SizedBox(
-                  width: 60,
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                potButton(pots[3], visiblePots[3]),
-                potButton(pots[4], visiblePots[4]),
-                potButton(pots[5], visiblePots[5]),
-              ],
-            ),
-            Image.asset('images/shelf.png'),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  width: 60,
-                ),
-                potTitle(pots[3], visiblePots[3]),
-                const SizedBox(
-                  width: 60,
-                ),
-                potTitle(pots[4], visiblePots[4]),
-                const SizedBox(
-                  width: 60,
-                ),
-                potTitle(pots[5], visiblePots[5]),
-                const SizedBox(
-                  width: 60,
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                potButton(pots[6], visiblePots[6]),
-                potButton(pots[7], visiblePots[7]),
-                potButton(pots[8], visiblePots[8]),
-              ],
-            ),
-            Image.asset('images/shelf.png'),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  width: 60,
-                ),
-                potTitle(pots[6], visiblePots[6]),
-                const SizedBox(
-                  width: 60,
-                ),
-                potTitle(pots[7], visiblePots[7]),
-                const SizedBox(
-                  width: 60,
-                ),
-                potTitle(pots[8], visiblePots[8]),
-                const SizedBox(
-                  width: 60,
-                ),
-              ],
-            ),
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 30),
+              Text(
+                widget.room,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.playfairDisplay(
+                    color: Colors.black,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 30),
+              ...getUIRows()
+            ],
+          ),
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () async {
-            final result = await openAddPlant(context, 'room 1');
+            final result = await openAddPlant(context, widget.room);
           },
           backgroundColor: const Color(0xFF5F725F),
           label: const Text("Add Pot"),
@@ -170,55 +77,47 @@ class _RoomDetailsState extends State<RoomDetails> {
         resizeToAvoidBottomInset: false);
   }
 
-  Visibility potButton(String potName, bool isVisible) {
-    return Visibility(
-        visible: isVisible,
-        maintainState: true,
-        maintainAnimation: true,
-        maintainSize: true,
-        child: IconButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PotDetails(potName)));
-          },
-          icon: Image.asset(
-            'images/pot.png',
-          ),
-          iconSize: 120,
-          padding: EdgeInsets.zero,
-        ));
+  Widget getPotButton(int potId) {
+    return IconButton(
+      onPressed: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => PotDetails(potId)));
+      },
+      icon: Image.asset(
+        'images/pot.png',
+      ),
+      iconSize: 120,
+      padding: EdgeInsets.zero,
+    );
   }
 
-  Expanded potTitle(String potName, bool isVisible) {
+  Widget getPotTitle(String potName) {
     return Expanded(
-        child: Visibility(
-      visible: isVisible,
-      maintainState: true,
-      maintainAnimation: true,
-      maintainSize: true,
       child: Text(
         potName,
         overflow: TextOverflow.ellipsis,
         textAlign: TextAlign.center,
         style: GoogleFonts.playfairDisplay(color: Colors.black),
       ),
-    ));
+    );
   }
 
-  void getPots(String room) async {
-    var url = Uri.http('10.0.20.229:8080', 'room/{roomName}/plants');
+  void loadPots(String room) async {
+    debugPrint("loadPots");
+    var url = Uri.http('192.168.50.238:8080', 'room/$room/plants');
     final response = await http
         .get(url, headers: {'clientId': 'TEST_DEVICE', 'roomName': room});
-    final jsonData = json.decode(response.body);
     setState(() {
-      pots = List<String>.from(jsonData.map((item) => item["nickname"]));
+      pots = (json.decode(response.body) as List)
+          .map((e) => e as Map<String, dynamic>)
+          .toList();
     });
   }
 
   Future openAddPlant(BuildContext context, String room) async {
     final TextEditingController nameController = TextEditingController();
     final TextEditingController plantController = TextEditingController();
-    final List<String> plantEntries = await getPlants();
+    final List<String> plantEntries = await getSpecies();
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -279,13 +178,14 @@ class _RoomDetailsState extends State<RoomDetails> {
             style: const ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll<Color>(Colors.white)),
             onPressed: () async {
-              bool isSaved =
-                  await save(nameController.text, plantController.text, room);
-              if (isSaved) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PotDetails(nameController.text)));
+              http.Response response = await saveNewPlant(
+                  nameController.text, plantController.text, room);
+              loadPots(room); // load pots again
+              debugPrint(response.statusCode.toString());
+              if (response.statusCode == 201) {
+                int potId = json.decode(response.body)["id"];
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => PotDetails(potId)));
               } else {
                 Navigator.of(context).pop();
               }
@@ -301,22 +201,55 @@ class _RoomDetailsState extends State<RoomDetails> {
     );
   }
 
-  Future<bool> save(String name, String species, String room) async {
-    var url = Uri.http('10.0.20.229:8080', 'plant/add');
-    var response = await http.post(url, headers: {
-      'clientId': 'TEST_DEVICE'
-    }, body: {
-      "nickname": "string",
-      "species": "string",
-      "roomName": "string"
-    });
-    return response.statusCode == 201;
+  Future<http.Response> saveNewPlant(String name, String species, String room) {
+    var url = Uri.http('192.168.50.238:8080', 'plant/add');
+    return http.post(url,
+        headers: {
+          'clientId': 'TEST_DEVICE',
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(
+            {"nickname": name, "species": species, "roomName": room}));
   }
 
-  Future<List<String>> getPlants() async {
-    var url = Uri.http('10.0.20.229:8080', 'species/all');
+  Future<List<String>> getSpecies() async {
+    var url = Uri.http('192.168.50.238:8080', 'species/all');
     final response = await http.get(url, headers: {'clientId': 'TEST_DEVICE'});
     final jsonData = json.decode(response.body);
     return List<String>.from(jsonData.map((item) => item["name"]));
+  }
+
+  List<Widget> getUIRows() {
+    debugPrint("getUIRows");
+    List<Widget> result = [];
+
+    for (List<Map<String, dynamic>> threePots in splitIntoBatches(pots, 3)) {
+      List<Widget> row = [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children:
+              threePots.map<Widget>((pot) => getPotButton(pot["id"])).toList(),
+        ),
+        Image.asset('images/shelf.png'),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: threePots
+              .map<Widget>((pot) => getPotTitle(pot["nickname"]))
+              .toList(),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+      ];
+
+      result.addAll(row);
+
+      threePots = pots.take(3).toList();
+    }
+
+    return result;
   }
 }

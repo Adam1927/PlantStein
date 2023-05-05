@@ -6,19 +6,15 @@ class RoomPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return Scaffold(
         body: ElevatedButton(
-          child: const Text('room1'),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const RoomDetails("test room")));
-          },
-        ),
-      ),
-    );
+      child: const Text('room1'),
+      onPressed: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const RoomDetails("test room")));
+      },
+    ));
   }
 }
