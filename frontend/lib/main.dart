@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'room_page.dart';
 import 'bottom_navigation.dart';
 
@@ -11,11 +12,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    loadDotEnv();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.green),
       home: const RootPage(),
     );
+  }
+
+  void loadDotEnv() async {
+    await dotenv.load(fileName: ".env");
   }
 }
 

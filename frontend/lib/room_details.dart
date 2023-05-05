@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:plant_stein/utils.dart';
 import 'bottom_navigation.dart';
@@ -104,7 +105,7 @@ class _RoomDetailsState extends State<RoomDetails> {
 
   void loadPots(String room) async {
     debugPrint("loadPots");
-    var url = Uri.http('192.168.50.238:8080', 'room/$room/plants');
+    var url = Uri.http(dotenv.env["SERVER"]!, 'room/$room/plants');
     final response = await http
         .get(url, headers: {'clientId': 'TEST_DEVICE', 'roomName': room});
     setState(() {
@@ -202,7 +203,7 @@ class _RoomDetailsState extends State<RoomDetails> {
   }
 
   Future<http.Response> saveNewPlant(String name, String species, String room) {
-    var url = Uri.http('192.168.50.238:8080', 'plant/add');
+    var url = Uri.http(dotenv.env["SERVER"]!, 'plant/add');
     return http.post(url,
         headers: {
           'clientId': 'TEST_DEVICE',
@@ -214,7 +215,7 @@ class _RoomDetailsState extends State<RoomDetails> {
   }
 
   Future<List<String>> getSpecies() async {
-    var url = Uri.http('192.168.50.238:8080', 'species/all');
+    var url = Uri.http(dotenv.env["SERVER"]!, 'species/all');
     final response = await http.get(url, headers: {'clientId': 'TEST_DEVICE'});
     final jsonData = json.decode(response.body);
     return List<String>.from(jsonData.map((item) => item["name"]));
