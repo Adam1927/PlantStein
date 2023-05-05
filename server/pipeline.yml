@@ -35,7 +35,7 @@ server_code_tests:
     - gradle --build-cache assemble
     - apk add --update npm
     - npm install -g newman newman-reporter-html
-    - newman run server.test_collection.json reporters cli,html --reporter-html-export report.html
+    - newman run Server.postman_collection.json -e "Plant Stein Environment.postman_environment.json" reporters cli,html --reporter-html-export report.html
   tags:
     - docker
   cache:
