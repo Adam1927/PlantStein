@@ -1,5 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'insert_test_data.dart';
 import 'room_page.dart';
+import 'bottom_navigation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,6 +14,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    () async {
+      await dotenv.load(fileName: ".env");
+
+      if (kDebugMode) {
+        insertTestData();
+      }
+    }();
+
+    // If in debug mode then insert test data
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.green),
@@ -42,19 +56,7 @@ class _RootPageState extends State<RootPage> {
       ),
       body: const RoomPage(),
       backgroundColor: const Color(0xFFEBEDEB),
-      bottomNavigationBar: NavigationBar(
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.settings), label: ''),
-          NavigationDestination(icon: Icon(Icons.list), label: ''),
-          NavigationDestination(icon: Icon(Icons.home), label: ''),
-        ],
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPage = index;
-          });
-        },
-        selectedIndex: currentPage,
-      ),
+      bottomNavigationBar: const BottomNavigation(),
     );
   }
 }
