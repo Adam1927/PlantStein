@@ -19,7 +19,6 @@ public interface RoomRepository extends JpaRepository<Room, RoomId> {
     @Query("select r from Room r where r.roomId.clientId = ?1")
     List<Room> findByClientId(String clientId);
 
-
     @Transactional
     @Modifying
     @Query("UPDATE Room r SET r.roomId.name = ?3 WHERE r.roomId.name = ?1 and r.roomId.clientId = ?2")
