@@ -5,10 +5,9 @@
 
 # use the gradle docker image to make sure that gradle is installed on the machien
 
-
 build-server:
   image: gradle:alpine
-  stage: build 
+  stage: build
   script:
     - GRADLE_USER_HOME="$(pwd)/.gradle"
     - export GRADLE_USER_HOME
@@ -22,3 +21,14 @@ build-server:
     paths:
       - server/build/
       - server/.gradle/
+
+server_code_tests:
+  stage: test
+  image:
+    name: postman/newman_alpine33
+    entrypoint: [""]
+  script: -newman --version
+    -npm install -g newman-reporter-html
+    -newman run server.test_collection.json reporters cli,html --reporter-html-export report.html
+  artifacts:
+    paths: -report.html
