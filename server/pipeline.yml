@@ -33,9 +33,12 @@ server_code_tests:
     - export GRADLE_USER_HOME
     - cd server 
     - gradle --build-cache assemble
+    - java -jar plantstein-0.0.1-SNAPSHOT.jar
+    - PID=$!
     - apk add --update npm
     - npm install -g newman newman-reporter-html
     - newman run Server.postman_collection.json -e "Plant Stein Environment.postman_environment.json" reporters cli,html --reporter-html-export report.html
+    - kill $PID
   tags:
     - docker
   cache:
