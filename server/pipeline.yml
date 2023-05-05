@@ -27,10 +27,10 @@ build-server:
 server_code_tests:
   stage: test
   image: gradle:alpine
-  script: 
+  script:
     - GRADLE_USER_HOME="$(pwd)/.gradle"
     - export GRADLE_USER_HOME
-    - cd server 
+    - cd server
     - gradle --build-cache assemble
     - java -jar build/libs/plant-stein-server-0.0.1-SNAPSHOT.jar &
     - PID=$!
@@ -43,9 +43,9 @@ server_code_tests:
   cache:
     key: "$CI_COMMIT_REF_NAME"
     paths:
-      - server/build/
-      - server/.gradle/
+      - $CI_PROJECT_DIR/server/build/
+      - $CI_PROJECT_DIR/server/.gradle/
   artifacts:
-    paths: 
-    - report.html
-    - report.xml
+    paths:
+      - $CI_PROJECT_DIR/report.html
+      - $CI_PROJECT_DIR/report.xml
