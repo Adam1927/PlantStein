@@ -33,7 +33,7 @@ public class Species {
     @NotEmpty
     private double perfectHumidity;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Plant> plants;
 

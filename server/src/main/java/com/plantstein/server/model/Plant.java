@@ -23,10 +23,10 @@ public class Plant {
     @NotEmpty
     private String nickname;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Species species;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Room room;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
