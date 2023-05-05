@@ -48,3 +48,4 @@ server_code_tests:
   artifacts:
     paths: 
     - report.html
+    - report.xml
