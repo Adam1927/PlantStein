@@ -43,22 +43,26 @@ class _RoomDetailsState extends State<RoomDetails> {
         backgroundColor: const Color(0xFFEBEDEB),
       ),
       bottomNavigationBar: const BottomNavigation(),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: 30),
-          Text(
-            widget.room,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.playfairDisplay(
-                color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 30),
-          ...getUIRows()
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 30),
+            Text(
+              widget.room,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.playfairDisplay(
+                  color: Colors.black,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 30),
+            ...getUIRows()
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {},
