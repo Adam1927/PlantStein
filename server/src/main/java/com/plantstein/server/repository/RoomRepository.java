@@ -20,8 +20,6 @@ public interface RoomRepository extends JpaRepository<Room, RoomId> {
     @Query("select r from Room r where r.roomId.clientId = ?1")
     List<Room> findByClientId(String clientId);
 
-
-
     @Query("select p from Plant p where p.room.roomId = ?1")
     List<Plant> getPlantsInRoom(RoomId roomId);
 
