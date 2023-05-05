@@ -17,7 +17,6 @@ build-server:
     - docker
   cache:
     key: "$CI_COMMIT_REF_NAME"
-    policy: push
     paths:
       - server/build/
       - server/.gradle/
@@ -43,7 +42,6 @@ server_code_tests:
     - docker
   cache:
     key: "$CI_COMMIT_REF_NAME"
-    policy: push
     paths:
       - server/build/
       - server/.gradle/
