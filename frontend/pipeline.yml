@@ -14,4 +14,4 @@ build-app:
       - frontend/build
       - frontend/android/.gradle
       - frontend/android/build
-    policy: pull
+

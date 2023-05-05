@@ -17,7 +17,6 @@ build-server:
     - docker
   cache:
     key: "$CI_COMMIT_REF_NAME"
-    policy: push
     paths:
       - server/build/
       - server/.gradle/
@@ -37,16 +36,16 @@ server_code_tests:
     - PID=$!
     - apk add --update npm
     - npm install -g newman newman-reporter-html
-    - newman run Server.postman_collection.json -e "Plant Stein Environment.postman_environment.json" reporters cli,html --reporter-html-export report.html
+    - newman run Server.postman_collection.json -e "Plant Stein Environment.postman_environment.json" --delay-request 100 --reporters cli,html,junit --reporter-html-export report.html --reporter-junit-export report.xml
     - kill $PID
   tags:
     - docker
   cache:
     key: "$CI_COMMIT_REF_NAME"
-    policy: push
     paths:
       - server/build/
       - server/.gradle/
   artifacts:
     paths: 
     - report.html
+    - report.xml
