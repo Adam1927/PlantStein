@@ -3,8 +3,8 @@
 		"_postman_id": "bd661f9f-3c13-4bec-9f6e-601f28fd092b",
 		"name": "Server",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "27191917",
-		"_collection_link": "https://galactic-astronaut-133044.postman.co/workspace/Plant-Stein~d4468e4a-3f6a-4f7a-8aeb-af3c19a281e7/collection/9646785-bd661f9f-3c13-4bec-9f6e-601f28fd092b?action=share&creator=27191917&source=collection_link"
+		"_exporter_id": "9646785",
+		"_collection_link": "https://galactic-astronaut-133044.postman.co/workspace/Plant-Stein~d4468e4a-3f6a-4f7a-8aeb-af3c19a281e7/collection/9646785-bd661f9f-3c13-4bec-9f6e-601f28fd092b?action=share&creator=9646785&source=collection_link"
 	},
 	"item": [
 		{
@@ -68,7 +68,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "test room",
+					"raw": "Kitchen",
 					"options": {
 						"raw": {
 							"language": "text"
