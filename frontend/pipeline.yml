@@ -4,6 +4,7 @@ build-app:
   script:
     - cd frontend
     - touch .env
+    - flutter pub get
     - flutter build apk
   tags:
     - docker
