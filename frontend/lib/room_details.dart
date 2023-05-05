@@ -5,7 +5,6 @@ import 'bottom_navigation.dart';
 import 'pot_details.dart';
 import 'package:http/http.dart' as http;
 
-
 class RoomDetails extends StatefulWidget {
   final String room;
   const RoomDetails(this.room, {super.key});
@@ -201,7 +200,7 @@ class _RoomDetailsState extends State<RoomDetails> {
   }
 
   void getPots(String room) async {
-    var url = Uri.http('10.0.20.214:8080', 'room/{roomName}/plants');
+    var url = Uri.http('192.168.50.238:8080', 'room/$room/plants');
     final response = await http
         .get(url, headers: {'clientId': 'TEST_DEVICE', 'roomName': room});
     final jsonData = json.decode(response.body);
