@@ -2,7 +2,8 @@ build-app:
   image: instrumentisto/flutter
   stage: build
   script:
-    - cd frontend 
+    - cd frontend
+    - touch .env
     - flutter build apk
   tags:
-    - docker 
+    - docker

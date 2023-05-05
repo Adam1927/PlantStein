@@ -81,16 +81,24 @@ public class PlantRestController {
     @ApiResponse(responseCode = "200", description = "Plant renamed")
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @PutMapping("/rename/{id}/{newName}")
-    public Plant renamePlant(@PathVariable Long id, String newName) {
-        throw new NotYetImplementedException();
+    public Plant renamePlant(@PathVariable Long id, @PathVariable String newName) {
+        if (!plantRepository.existsById(id)) throw new NotFoundException("Plant " + id + " does not exist");
+
+        plantRepository.updatePlantName(id, newName);
+        return plantRepository.findById(id).orElseThrow();
     }
 
     @Operation(summary = "Change room of plant")
     @ApiResponse(responseCode = "200", description = "Plant moved into new room")
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @PutMapping("/change-room/{plantId}/{newRoomName}")
-    public Plant changeRoom(@PathVariable Long plantId, @PathVariable String newRoomName) {
-        throw new NotYetImplementedException();
+    public Plant changeRoom(@PathVariable Long plantId, @PathVariable String newRoomName, @RequestHeader String clientId) {
+        if (!plantRepository.existsById(plantId)) throw new NotFoundException("Plant " + plantId + " does not exist");
+        if (!roomRepository.existsById(new RoomId(newRoomName, clientId))) {
+            throw new NotFoundException("Room " + newRoomName + " does not exist");
+        }
+        plantRepository.updatePlantRoom(plantId, newRoomName);
+        return plantRepository.findById(plantId).orElseThrow();
     }
 
     @Operation(summary = "Delete plant")
