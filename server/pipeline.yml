@@ -49,3 +49,4 @@ server_code_tests:
     paths:
       - $CI_PROJECT_DIR/report.html
       - $CI_PROJECT_DIR/report.xml
+    when: always
