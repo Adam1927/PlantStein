@@ -1,10 +1,6 @@
 package com.plantstein.server.repository;
 
-import com.plantstein.server.dto.ConditionsDTO;
-import com.plantstein.server.model.Moisture;
 import com.plantstein.server.model.Plant;
-import com.plantstein.server.model.PlantTimeSeries;
-import com.plantstein.server.model.Room;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -17,16 +13,16 @@ import java.util.List;
 public interface PlantRepository extends JpaRepository<Plant, Long> {
     List<Plant> findByNickname(String nickname);
 
-    @Query("select p from Plant p where p.room.roomId.clientId = ?1")
+    @Query("select p from Plant p where p.room.clientId = ?1")
     List<Plant> findByClientId(String clientId);
 
-    @Query("select p from Plant p where p.room.roomId.clientId = ?2 and p.nickname = ?1")
+    @Query("select p from Plant p where p.room.clientId = ?2 and p.nickname = ?1")
     List<Plant> findByClientIdAndNickname(String nickname, String clientId);
 
     @Transactional
     @Modifying
-    @Query("UPDATE Plant p SET p.room.roomId.name = ?2 WHERE p.id = ?1")
-    Integer updatePlantRoom(Long id, String newRoom);
+    @Query("UPDATE Plant p SET p.room.id = ?2 WHERE p.id = ?1")
+    Integer updatePlantRoom(Long plantId, Long roomId);
 
     @Transactional
     @Modifying

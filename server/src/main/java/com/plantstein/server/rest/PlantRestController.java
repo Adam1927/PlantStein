@@ -5,7 +5,8 @@ import com.plantstein.server.dto.NewPlantDTO;
 import com.plantstein.server.exception.NotFoundException;
 import com.plantstein.server.model.Plant;
 import com.plantstein.server.model.PlantTimeSeries;
-import com.plantstein.server.model.RoomId;
+import com.plantstein.server.model.Room;
+import com.plantstein.server.model.Species;
 import com.plantstein.server.repository.PlantRepository;
 import com.plantstein.server.repository.RoomRepository;
 import com.plantstein.server.repository.SpeciesRepository;
@@ -61,19 +62,18 @@ public class PlantRestController {
     @ApiResponse(responseCode = "201", description = "Added plant")
     @ApiResponse(responseCode = "400", description = "Invalid plant data", content = @Content)
     @PostMapping("/add")
-    public ResponseEntity<Plant> addPlant(@RequestBody NewPlantDTO plantDTO, @RequestHeader String clientId) {
-        if (!roomRepository.existsById(new RoomId(plantDTO.getRoomName(), clientId))) {
-            throw new NotFoundException("Room " + plantDTO.getRoomName() + " does not exist");
-        }
-        if (!speciesRepository.existsById(plantDTO.getSpecies())){
-            throw new NotFoundException("Species " + plantDTO.getSpecies().toString() + " does not exist");
-        }
+    public ResponseEntity<Plant> addPlant(@RequestBody NewPlantDTO plantDTO) {
+        Room room = roomRepository.findById(plantDTO.getRoomId())
+                .orElseThrow(() -> new NotFoundException("Room with ID " + plantDTO.getRoomId() + " does not exist"));
+        Species species = speciesRepository.findById(plantDTO.getSpecies())
+                .orElseThrow(() -> new NotFoundException("Species " + plantDTO.getSpecies() + " does not exist"));
+
         Plant plant = Plant.builder()
                 .nickname(plantDTO.getNickname())
-                .species(speciesRepository.findById(plantDTO.getSpecies()).get())
-                .room(roomRepository.findById(new RoomId(plantDTO.getRoomName(), clientId)).get())
+                .species(species)
+                .room(room)
                 .build();
-        plant.getRoom().getRoomId().setClientId(clientId);
+
         return new ResponseEntity<>(plantRepository.save(plant), HttpStatus.CREATED);
     }
 
@@ -92,12 +92,12 @@ public class PlantRestController {
     @ApiResponse(responseCode = "200", description = "Plant moved into new room")
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @PutMapping("/change-room/{plantId}/{newRoomName}")
-    public Plant changeRoom(@PathVariable Long plantId, @PathVariable String newRoomName, @RequestHeader String clientId) {
+    public Plant changeRoom(@PathVariable Long plantId, @PathVariable Long newRoom) {
         if (!plantRepository.existsById(plantId)) throw new NotFoundException("Plant " + plantId + " does not exist");
-        if (!roomRepository.existsById(new RoomId(newRoomName, clientId))) {
-            throw new NotFoundException("Room " + newRoomName + " does not exist");
+        if (!roomRepository.existsById(newRoom)) {
+            throw new NotFoundException("Room with ID " + newRoom + " does not exist");
         }
-        plantRepository.updatePlantRoom(plantId, newRoomName);
+        plantRepository.updatePlantRoom(plantId, newRoom);
         return plantRepository.findById(plantId).orElseThrow();
     }
 
@@ -116,7 +116,7 @@ public class PlantRestController {
     @ApiResponse(responseCode = "200", description = "Plant condition object")
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @GetMapping("/condition/{id}")
-    public ConditionsDTO getCondition(@PathVariable Long id, @RequestHeader String clientId) {
+    public ConditionsDTO getCondition(@PathVariable Long id) {
         throw new NotYetImplementedException();
     }
 
@@ -125,7 +125,7 @@ public class PlantRestController {
     @ApiResponse(responseCode = "400", description = "Invalid number of days", content = @Content)
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @GetMapping("/condition/{id}/{days}")
-    public List<PlantTimeSeries> getConditionOverTime(@PathVariable Long id, @Positive Integer days, @RequestHeader String clientId) {
+    public List<PlantTimeSeries> getConditionOverTime(@PathVariable Long id, @Positive Integer days) {
         throw new NotYetImplementedException();
     }
 

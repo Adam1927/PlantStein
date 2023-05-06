@@ -1,10 +1,7 @@
 package com.plantstein.server.repository;
 
 import com.plantstein.server.model.Plant;
-import com.plantstein.server.model.PlantTimeSeries;
 import com.plantstein.server.model.Room;
-import com.plantstein.server.model.RoomId;
-import com.plantstein.server.model.RoomTimeSeries;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -15,16 +12,16 @@ import java.util.List;
 
 
 @Repository
-public interface RoomRepository extends JpaRepository<Room, RoomId> {
+public interface RoomRepository extends JpaRepository<Room, Long> {
 
-    @Query("select r from Room r where r.roomId.clientId = ?1")
+    @Query("select r from Room r where r.clientId = ?1")
     List<Room> findByClientId(String clientId);
 
-    @Query("select p from Plant p where p.room.roomId = ?1")
-    List<Plant> getPlantsInRoom(RoomId roomId);
+    @Query("select p from Plant p where p.room.id = ?1")
+    List<Plant> getPlantsInRoom(Long roomId);
 
     @Transactional
     @Modifying
-    @Query("UPDATE Room r SET r.roomId.name = ?3 WHERE r.roomId.name = ?1 and r.roomId.clientId = ?2")
-    Integer updateRoomName(String currentName, String clientId, String newName);
+    @Query("UPDATE Room r SET r.name = ?2 WHERE r.id = ?1")
+    Integer updateRoomName(Long id, String newName);
 }
