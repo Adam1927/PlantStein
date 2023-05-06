@@ -107,7 +107,8 @@ class _RoomDetailsState extends State<RoomDetails> {
   void loadPots(int roomId) async {
     debugPrint("loadPots");
     var url = Uri.http(dotenv.env["SERVER"]!, 'room/$roomId/plants');
-    final response = await http.get(url, headers: {'clientId': 'TEST_DEVICE'});
+    final response =
+        await http.get(url, headers: {'clientId': dotenv.env["CLIENT"]!});
     setState(() {
       pots = (json.decode(response.body) as List)
           .map((e) => e as Map<String, dynamic>)
@@ -206,7 +207,7 @@ class _RoomDetailsState extends State<RoomDetails> {
     var url = Uri.http(dotenv.env["SERVER"]!, 'plant/add');
     return http.post(url,
         headers: {
-          'clientId': 'TEST_DEVICE',
+          'clientId': dotenv.env["CLIENT"]!,
           "Accept": "application/json",
           "content-type": "application/json"
         },
@@ -216,7 +217,8 @@ class _RoomDetailsState extends State<RoomDetails> {
 
   Future<List<String>> getSpecies() async {
     var url = Uri.http(dotenv.env["SERVER"]!, 'species/all');
-    final response = await http.get(url, headers: {'clientId': 'TEST_DEVICE'});
+    final response =
+        await http.get(url, headers: {'clientId': dotenv.env["CLIENT"]!});
     final jsonData = json.decode(response.body);
     return List<String>.from(jsonData.map((item) => item["name"]));
   }
