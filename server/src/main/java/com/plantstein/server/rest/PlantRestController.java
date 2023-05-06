@@ -91,7 +91,7 @@ public class PlantRestController {
     @Operation(summary = "Change room of plant")
     @ApiResponse(responseCode = "200", description = "Plant moved into new room")
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
-    @PutMapping("/change-room/{plantId}/{newRoomName}")
+    @PutMapping("/change-room/{plantId}/{newRoom}")
     public Plant changeRoom(@PathVariable Long plantId, @PathVariable Long newRoom) {
         if (!plantRepository.existsById(plantId)) throw new NotFoundException("Plant " + plantId + " does not exist");
         if (!roomRepository.existsById(newRoom)) {

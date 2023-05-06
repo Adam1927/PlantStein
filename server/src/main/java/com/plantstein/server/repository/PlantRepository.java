@@ -31,6 +31,9 @@ public interface PlantRepository extends JpaRepository<Plant, Long> {
 
     @Transactional
     @Modifying
-    @Query("DELETE FROM Plant p WHERE p.room.clientId = ?1")
-    Integer deleteAllByClientId(String clientId);
+    Integer deleteAllByRoomId(Long roomId);
+
+    @Transactional
+    @Modifying
+    Integer deleteAllByRoomClientId(String clientId);
 }

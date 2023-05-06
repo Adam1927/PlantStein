@@ -1,14 +1,13 @@
 package com.plantstein.server.model;
 
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -16,8 +15,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlantTimeSeries {
-    @EmbeddedId
-    private PlantTimeSeriesId plantTimeSeriesId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @NotEmpty
+    private Plant plant;
+
+    @NotEmpty
+    private Timestamp timestamp;
 
     @NotEmpty
     @Enumerated(EnumType.ORDINAL)

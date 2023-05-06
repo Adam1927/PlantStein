@@ -1,12 +1,13 @@
 package com.plantstein.server.model;
 
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -14,8 +15,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomTimeSeries {
-    @EmbeddedId
-    private RoomTimeSeriesId roomTimeSeriesId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @ManyToOne
+    @NotEmpty
+    private Room room;
+
+    @NotEmpty
+    private Timestamp timestamp;
 
     @NotEmpty
     private double temperature;

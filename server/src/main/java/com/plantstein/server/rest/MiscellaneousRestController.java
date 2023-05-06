@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping()
 @Tag(name = "Miscellaneous")
 @RequiredArgsConstructor
-public class AppRestController {
+public class MiscellaneousRestController {
     private final RoomRepository roomRepository;
     private final PlantRepository plantRepository;
 
@@ -23,7 +23,7 @@ public class AppRestController {
     @ApiResponse(responseCode = "200", description = "All user data deleted")
     @DeleteMapping("/delete-user-data")
     public void deleteUserData(@RequestHeader String clientId) {
-        plantRepository.deleteAllByClientId(clientId);
+        plantRepository.deleteAllByRoomClientId(clientId);
         roomRepository.deleteAllByClientId(clientId);
     }
 }

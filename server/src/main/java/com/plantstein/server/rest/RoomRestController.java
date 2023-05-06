@@ -5,6 +5,7 @@ import com.plantstein.server.exception.NotFoundException;
 import com.plantstein.server.model.Plant;
 import com.plantstein.server.model.Room;
 import com.plantstein.server.model.RoomTimeSeries;
+import com.plantstein.server.repository.PlantRepository;
 import com.plantstein.server.repository.RoomRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -28,6 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoomRestController {
     private final RoomRepository roomRepository;
+    private final PlantRepository plantRepository;
 
     @Operation(summary = "Get all rooms of user")
     @ApiResponse(responseCode = "200", description = "List of rooms")
@@ -98,11 +100,11 @@ public class RoomRestController {
     @Operation(summary = "Delete a room")
     @ApiResponse(responseCode = "200", description = "Room deleted")
     @ApiResponse(responseCode = "404", description = "Room does not exist", content = @Content)
-    @DeleteMapping("/delete/{roomName}")
+    @DeleteMapping("/delete/{roomId}")
     public Room delete(@PathVariable Long roomId) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new NotFoundException("Room with ID " + roomId + " does not exist"));
-
+        plantRepository.deleteAllByRoomId(roomId);
         roomRepository.deleteById(roomId);
 
         return room;
