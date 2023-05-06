@@ -24,4 +24,9 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     @Modifying
     @Query("UPDATE Room r SET r.name = ?2 WHERE r.id = ?1")
     Integer updateRoomName(Long id, String newName);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Room r WHERE r.clientId = ?1")
+    Integer deleteAllByClientId(String clientId);
 }

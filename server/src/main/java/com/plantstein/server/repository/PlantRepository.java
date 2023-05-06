@@ -28,4 +28,9 @@ public interface PlantRepository extends JpaRepository<Plant, Long> {
     @Modifying
     @Query("UPDATE Plant p SET p.nickname = ?2 WHERE p.id = ?1")
     Integer updatePlantName(Long id, String newName);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Plant p WHERE p.room.clientId = ?1")
+    Integer deleteAllByClientId(String clientId);
 }
