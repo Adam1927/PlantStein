@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
 
-    @Query("select r from Room r where r.clientId = ?1")
+    @Query("select r from Room r where r.clientId = ?1 order by r.id asc")
     List<Room> findByClientId(String clientId);
 
     @Query("select p from Plant p where p.room.id = ?1")

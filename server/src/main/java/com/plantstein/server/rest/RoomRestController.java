@@ -54,6 +54,7 @@ public class RoomRestController {
     public ResponseEntity<Room> add(@RequestBody String roomName, @RequestHeader String clientId) {
         Room newRoom = Room.builder()
                 .name(roomName)
+                .clientId(clientId)
                 .build();
 
         try {

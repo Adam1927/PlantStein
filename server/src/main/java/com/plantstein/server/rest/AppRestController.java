@@ -23,7 +23,7 @@ public class AppRestController {
     @ApiResponse(responseCode = "200", description = "All user data deleted")
     @DeleteMapping("/delete-user-data")
     public void deleteUserData(@RequestHeader String clientId) {
-        plantRepository.deleteAll();
-        roomRepository.deleteAll();
+        plantRepository.deleteAllByClientId(clientId);
+        roomRepository.deleteAllByClientId(clientId);
     }
 }
