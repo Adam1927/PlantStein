@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,7 @@ public class RoomRestController {
     @Operation(summary = "Get plants in room")
     @ApiResponse(responseCode = "200", description = "List of plants in room")
     @ApiResponse(responseCode = "404", description = "Room does not exist", content = @Content)
-    @GetMapping("/{roomName}/plants")
+    @GetMapping("/{roomId}/plants")
     public List<Plant> getPlantsInRoom(@PathVariable Long roomId) {
         roomRepository.findById(roomId)
                 .orElseThrow(() -> new NotFoundException("Room does not exist"));
@@ -50,18 +51,18 @@ public class RoomRestController {
     @ApiResponse(responseCode = "201", description = "Room added")
     @ApiResponse(responseCode = "400", description = "Room already exists", content = @Content)
     @PostMapping("/add")
-    public ResponseEntity<Room> add(@RequestBody Long roomId, @RequestHeader String clientId) {
-        if (roomRepository.existsById(roomId)) {
-            throw new AlreadyExistsException("Room already exists");
-        }
-
+    public ResponseEntity<Room> add(@RequestBody String roomName, @RequestHeader String clientId) {
         Room newRoom = Room.builder()
-                .id(roomId)
+                .name(roomName)
                 .build();
 
-        return new ResponseEntity<>(
-                roomRepository.save(newRoom),
-                HttpStatus.CREATED);
+        try {
+            return new ResponseEntity<>(
+                    roomRepository.save(newRoom),
+                    HttpStatus.CREATED);
+        } catch (ConstraintViolationException e) {
+            throw new AlreadyExistsException("Room " + roomName + " already exists for this client");
+        }
     }
 
 

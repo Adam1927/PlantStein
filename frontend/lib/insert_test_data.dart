@@ -46,8 +46,8 @@ void insertTestData() async {
 
   for (String room in rooms) {
     for (int i = 0; i < random.nextInt(10) + 3; i++) {
-      await insertPlant(
-          plantNames.randomItem(), species.randomItem(), rooms.randomItem());
+      await insertPlant(plantNames.randomItem(), species.randomItem(),
+          random.nextInt(rooms.length) + 1);
     }
   }
 }
@@ -63,7 +63,7 @@ Future<Response> insertRoom(String roomName) {
       body: roomName);
 }
 
-Future<Response> insertPlant(String name, String species, String room) {
+Future<Response> insertPlant(String name, String species, int room) {
   var url = Uri.http(dotenv.env["SERVER"]!, 'plant/add');
   return http.post(url,
       headers: {
@@ -71,6 +71,5 @@ Future<Response> insertPlant(String name, String species, String room) {
         "Accept": "application/json",
         "content-type": "application/json"
       },
-      body:
-          jsonEncode({"nickname": name, "species": species, "roomName": room}));
+      body: jsonEncode({"nickname": name, "species": species, "roomId": room}));
 }

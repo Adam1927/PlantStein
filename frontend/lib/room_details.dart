@@ -11,8 +11,9 @@ import 'pot_details.dart';
 import 'package:http/http.dart' as http;
 
 class RoomDetails extends StatefulWidget {
-  final String room;
-  const RoomDetails(this.room, {super.key});
+  final int roomId;
+  final String roomName;
+  const RoomDetails(this.roomId, this.roomName, {super.key});
 
   @override
   State<RoomDetails> createState() => _RoomDetailsState();
@@ -26,7 +27,7 @@ class _RoomDetailsState extends State<RoomDetails> {
     super.initState();
     debugPrint("initState");
     // load pots only once (when widget is created)
-    loadPots(widget.room);
+    loadPots(widget.roomId);
   }
 
   @override
@@ -54,7 +55,7 @@ class _RoomDetailsState extends State<RoomDetails> {
             children: [
               const SizedBox(height: 30),
               Text(
-                widget.room,
+                widget.roomName,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.playfairDisplay(
@@ -69,7 +70,7 @@ class _RoomDetailsState extends State<RoomDetails> {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () async {
-            final result = await openAddPlant(context, widget.room);
+            final result = await openAddPlant(context);
           },
           backgroundColor: const Color(0xFF5F725F),
           label: const Text("Add Pot"),
@@ -103,11 +104,10 @@ class _RoomDetailsState extends State<RoomDetails> {
     );
   }
 
-  void loadPots(String room) async {
+  void loadPots(int roomId) async {
     debugPrint("loadPots");
-    var url = Uri.http(dotenv.env["SERVER"]!, 'room/$room/plants');
-    final response = await http
-        .get(url, headers: {'clientId': 'TEST_DEVICE', 'roomName': room});
+    var url = Uri.http(dotenv.env["SERVER"]!, 'room/$roomId/plants');
+    final response = await http.get(url, headers: {'clientId': 'TEST_DEVICE'});
     setState(() {
       pots = (json.decode(response.body) as List)
           .map((e) => e as Map<String, dynamic>)
@@ -115,7 +115,7 @@ class _RoomDetailsState extends State<RoomDetails> {
     });
   }
 
-  Future openAddPlant(BuildContext context, String room) async {
+  Future openAddPlant(BuildContext context) async {
     final TextEditingController nameController = TextEditingController();
     final TextEditingController plantController = TextEditingController();
     final List<String> plantEntries = await getSpecies();
@@ -180,8 +180,8 @@ class _RoomDetailsState extends State<RoomDetails> {
                 backgroundColor: MaterialStatePropertyAll<Color>(Colors.white)),
             onPressed: () async {
               http.Response response = await saveNewPlant(
-                  nameController.text, plantController.text, room);
-              loadPots(room); // load pots again
+                  nameController.text, plantController.text, widget.roomId);
+              loadPots(widget.roomId); // load pots again
               debugPrint(response.statusCode.toString());
               if (response.statusCode == 201) {
                 int potId = json.decode(response.body)["id"];
@@ -202,7 +202,7 @@ class _RoomDetailsState extends State<RoomDetails> {
     );
   }
 
-  Future<http.Response> saveNewPlant(String name, String species, String room) {
+  Future<http.Response> saveNewPlant(String name, String species, int roomId) {
     var url = Uri.http(dotenv.env["SERVER"]!, 'plant/add');
     return http.post(url,
         headers: {
@@ -211,7 +211,7 @@ class _RoomDetailsState extends State<RoomDetails> {
           "content-type": "application/json"
         },
         body: jsonEncode(
-            {"nickname": name, "species": species, "roomName": room}));
+            {"nickname": name, "species": species, "roomId": roomId}));
   }
 
   Future<List<String>> getSpecies() async {
