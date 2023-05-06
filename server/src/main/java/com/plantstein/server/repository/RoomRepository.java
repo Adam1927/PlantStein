@@ -1,10 +1,8 @@
 package com.plantstein.server.repository;
 
 import com.plantstein.server.model.Plant;
-import com.plantstein.server.model.PlantTimeSeries;
 import com.plantstein.server.model.Room;
 import com.plantstein.server.model.RoomId;
-import com.plantstein.server.model.RoomTimeSeries;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -27,4 +25,9 @@ public interface RoomRepository extends JpaRepository<Room, RoomId> {
     @Modifying
     @Query("UPDATE Room r SET r.roomId.name = ?3 WHERE r.roomId.name = ?1 and r.roomId.clientId = ?2")
     Integer updateRoomName(String currentName, String clientId, String newName);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Room r WHERE r.roomId.clientId = ?1")
+    Integer deleteAllByClientId(String clientId);
 }

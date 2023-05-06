@@ -1,10 +1,6 @@
 package com.plantstein.server.repository;
 
-import com.plantstein.server.dto.ConditionsDTO;
-import com.plantstein.server.model.Moisture;
 import com.plantstein.server.model.Plant;
-import com.plantstein.server.model.PlantTimeSeries;
-import com.plantstein.server.model.Room;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -32,4 +28,9 @@ public interface PlantRepository extends JpaRepository<Plant, Long> {
     @Modifying
     @Query("UPDATE Plant p SET p.nickname = ?2 WHERE p.id = ?1")
     Integer updatePlantName(Long id, String newName);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Plant p WHERE p.room.roomId.clientId = ?1")
+    Integer deleteAllByClientId(String clientId);
 }
