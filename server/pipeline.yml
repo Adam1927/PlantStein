@@ -36,7 +36,7 @@ server_code_tests:
     - PID=$!
     - apk add --update npm
     - npm install -g newman newman-reporter-html
-    - newman run Server.postman_collection.json -e "Plant Stein Environment.postman_environment.json" --delay-request 100 --reporters cli,html,junit --reporter-html-export report.html --reporter-junit-export report.xml
+    - newman run Server.postman_collection.json -e "Plant Stein Environment.postman_environment.json" --delay-request 100 --reporters cli,html,junit --reporter-html-export ../report.html --reporter-junit-export ../report.xml
     - kill $PID
   tags:
     - docker
