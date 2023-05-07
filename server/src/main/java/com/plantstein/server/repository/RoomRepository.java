@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
 
@@ -29,8 +28,4 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     @Modifying
     @Query("DELETE FROM Room r WHERE r.clientId = ?1")
     Integer deleteAllByClientId(String clientId);
-
-    @Query("select r from RoomTimeSeries r where r.room.id = ?1 order by r.timestamp desc limit ?2")
-    List<Double> getNLastTimeSeries(Long roomId, int n);
-
 }

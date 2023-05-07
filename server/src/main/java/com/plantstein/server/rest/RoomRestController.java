@@ -72,7 +72,6 @@ public class RoomRestController {
         }
     }
 
-
     @Operation(summary = "Rename room")
     @ApiResponse(responseCode = "200", description = "Room renamed")
     @ApiResponse(responseCode = "404", description = "Room does not exist", content = @Content)
@@ -87,12 +86,11 @@ public class RoomRestController {
         return roomRepository.findById(roomId).orElseThrow();
     }
 
-    @Operation(summary = "Get current room condition",
-            description = "Current room condition is an average of the last 10 entries")
+    @Operation(summary = "Get current room condition", description = "Current room condition is an average of the last 10 entries")
     @ApiResponse(responseCode = "200", description = "Room condition object")
     @GetMapping("/condition/{id}")
     public RoomConditionDTO getCondition(@PathVariable Long id) {
-        Room room = roomRepository.findById(id)
+        roomRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Room with ID " + id + " does not exist"));
 
         List<RoomTimeSeries> rtsEntries = roomTimeSeriesRepository.findFirst10ByRoomIdOrderByTimestampDesc(id);
@@ -122,13 +120,12 @@ public class RoomRestController {
         Timestamp nDaysAgo = new Timestamp(System.currentTimeMillis() - (lastNDays * 24 * 60 * 60 * 1000));
         List<Object[]> avgValues = roomTimeSeriesRepository.getAvgValuesForLastNDays(nDaysAgo);
 
-        return avgValues.stream().map(values ->
-                        RoomConditionOverTimeDTO.builder()
-                                .weekday((String) values[1])
-                                .brightness((Double) values[2])
-                                .temperature((Double) values[3])
-                                .humidity((Double) values[4])
-                                .build())
+        return avgValues.stream().map(values -> RoomConditionOverTimeDTO.builder()
+                        .weekday((String) values[1])
+                        .brightness((Double) values[2])
+                        .temperature((Double) values[3])
+                        .humidity((Double) values[4])
+                        .build())
                 .toList();
     }
 
