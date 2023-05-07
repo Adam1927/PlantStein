@@ -1,7 +1,7 @@
 package com.plantstein.server.rest;
 
-import com.plantstein.server.dto.ConditionsDTO;
 import com.plantstein.server.dto.NewPlantDTO;
+import com.plantstein.server.dto.PlantConditionDTO;
 import com.plantstein.server.exception.NotFoundException;
 import com.plantstein.server.model.Plant;
 import com.plantstein.server.model.PlantTimeSeries;
@@ -116,7 +116,7 @@ public class PlantRestController {
     @ApiResponse(responseCode = "200", description = "Plant condition object")
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @GetMapping("/condition/{id}")
-    public ConditionsDTO getCondition(@PathVariable Long id) {
+    public PlantConditionDTO getCondition(@PathVariable Long id) {
         throw new NotYetImplementedException();
     }
 

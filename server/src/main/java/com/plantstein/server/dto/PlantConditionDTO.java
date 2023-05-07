@@ -1,10 +1,12 @@
 package com.plantstein.server.dto;
 
 import com.plantstein.server.model.Moisture;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class ConditionsDTO {
+@Builder
+public class PlantConditionDTO {
     private String plantNickname;
     private double temperature;
     private double brightness;
