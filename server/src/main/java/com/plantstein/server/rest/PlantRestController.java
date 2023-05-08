@@ -1,7 +1,7 @@
 package com.plantstein.server.rest;
 
-import com.plantstein.server.dto.ConditionsDTO;
 import com.plantstein.server.dto.NewPlantDTO;
+import com.plantstein.server.dto.PlantConditionDTO;
 import com.plantstein.server.exception.NotFoundException;
 import com.plantstein.server.model.Plant;
 import com.plantstein.server.model.PlantTimeSeries;
@@ -82,7 +82,8 @@ public class PlantRestController {
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @PutMapping("/rename/{id}/{newName}")
     public Plant renamePlant(@PathVariable Long id, @PathVariable String newName) {
-        if (!plantRepository.existsById(id)) throw new NotFoundException("Plant " + id + " does not exist");
+        if (!plantRepository.existsById(id))
+            throw new NotFoundException("Plant " + id + " does not exist");
 
         plantRepository.updatePlantName(id, newName);
         return plantRepository.findById(id).orElseThrow();
@@ -93,7 +94,8 @@ public class PlantRestController {
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @PutMapping("/change-room/{plantId}/{newRoom}")
     public Plant changeRoom(@PathVariable Long plantId, @PathVariable Long newRoom) {
-        if (!plantRepository.existsById(plantId)) throw new NotFoundException("Plant " + plantId + " does not exist");
+        if (!plantRepository.existsById(plantId))
+            throw new NotFoundException("Plant " + plantId + " does not exist");
         if (!roomRepository.existsById(newRoom)) {
             throw new NotFoundException("Room with ID " + newRoom + " does not exist");
         }
@@ -116,7 +118,7 @@ public class PlantRestController {
     @ApiResponse(responseCode = "200", description = "Plant condition object")
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @GetMapping("/condition/{id}")
-    public ConditionsDTO getCondition(@PathVariable Long id) {
+    public PlantConditionDTO getCondition(@PathVariable Long id) {
         throw new NotYetImplementedException();
     }
 

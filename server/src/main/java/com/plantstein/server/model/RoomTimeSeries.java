@@ -1,6 +1,7 @@
 package com.plantstein.server.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,21 +19,21 @@ public class RoomTimeSeries {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @ManyToOne
-    @NotEmpty
+    @NotNull
     private Room room;
 
-    @NotEmpty
+    @NotNull
     private Timestamp timestamp;
 
-    @NotEmpty
-    private double temperature;
+    @NotNull
+    private Double temperature;
 
-    @NotEmpty
-    private double brightness;
+    @NotNull
+    private Double brightness;
 
-    @NotEmpty
-    private double humidity;
+    @NotNull
+    private Double humidity;
 
 }
