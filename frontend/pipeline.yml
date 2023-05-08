@@ -14,4 +14,3 @@ build-app:
       - $CI_PROJECT_DIR/frontend/.dart_tool/
       - $CI_PROJECT_DIR/frontend/build/
       - $CI_PROJECT_DIR/frontend/android/.gradle/
-      - $CI_PROJECT_DIR/frontend/android/build/
