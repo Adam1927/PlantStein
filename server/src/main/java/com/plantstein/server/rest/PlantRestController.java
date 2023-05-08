@@ -1,5 +1,6 @@
 package com.plantstein.server.rest;
 
+import com.plantstein.server.dto.CheckPlantConditionsDTO;
 import com.plantstein.server.dto.NewPlantDTO;
 import com.plantstein.server.dto.PlantConditionDTO;
 import com.plantstein.server.exception.NotFoundException;
@@ -10,6 +11,7 @@ import com.plantstein.server.model.Species;
 import com.plantstein.server.repository.PlantRepository;
 import com.plantstein.server.repository.RoomRepository;
 import com.plantstein.server.repository.SpeciesRepository;
+import com.plantstein.server.util.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +37,10 @@ public class PlantRestController {
     private final PlantRepository plantRepository;
     private final SpeciesRepository speciesRepository;
     private final RoomRepository roomRepository;
+
+    private static final double BRIGHTNESS_SLACK = 0.5;
+    private static final double TEMPERATURE_SLACK = 2.0;
+    private static final double HUMIDITY_SLACK = 5.0;
 
     @Operation(summary = "Get all plants of user")
     @ApiResponse(responseCode = "200", description = "List of plants")
@@ -131,4 +138,54 @@ public class PlantRestController {
         throw new NotYetImplementedException();
     }
 
+    @Operation(summary = "Check if a plant is not in its perfect conditions")
+    @ApiResponse(responseCode = "200", description = "List of plants that are not in their perfect conditions. Empty list if all plants are in their perfect conditions")
+    @GetMapping("/check-conditions/")
+    public List<CheckPlantConditionsDTO> checkConditions(@RequestHeader String clientId) {
+        List<CheckPlantConditionsDTO> response = new ArrayList<>();
+        for (Plant userPlant : plantRepository.findByClientId(clientId)) {
+            PlantConditionDTO condition = getCondition(userPlant.getId());
+            Species species = userPlant.getSpecies();
+
+            int brightnessCheck = Utils.checkWithinTargetValue(condition.getBrightness(), species.getPerfectLight(), BRIGHTNESS_SLACK);
+            if (brightnessCheck != 0)
+                response.add(
+                        CheckPlantConditionsDTO.builder()
+                                .plantId(userPlant.getId())
+                                .plantName(userPlant.getNickname())
+                                .message(
+                                        brightnessCheck > 0 ?
+                                                "It's too bright for " + userPlant.getNickname() + "!"
+                                                : "It's not bright enough for " + userPlant.getNickname() + "!"
+                                ).build()
+                );
+
+            int temperatureCheck = Utils.checkWithinTargetValue(condition.getTemperature(), species.getPerfectTemperature(), TEMPERATURE_SLACK);
+            if (temperatureCheck != 0)
+                response.add(
+                        CheckPlantConditionsDTO.builder()
+                                .plantId(userPlant.getId())
+                                .plantName(userPlant.getNickname())
+                                .message(
+                                        temperatureCheck > 0 ?
+                                                "It's too hot for " + userPlant.getNickname() + "!"
+                                                : "It's too cold enough for " + userPlant.getNickname() + "!").build()
+                );
+
+            int humidityCheck = Utils.checkWithinTargetValue(condition.getBrightness(), species.getPerfectLight(), BRIGHTNESS_SLACK);
+            if (humidityCheck != 0)
+                response.add(
+                        CheckPlantConditionsDTO.builder()
+                                .plantId(userPlant.getId())
+                                .plantName(userPlant.getNickname())
+                                .message(
+                                        humidityCheck > 0 ?
+                                                "The humidity is too high for " + userPlant.getNickname() + "!"
+                                                : "The humidity isn't high enough for " + userPlant.getNickname() + "!"
+                                ).build()
+                );
+        }
+        return response;
+    }
+    
 }
