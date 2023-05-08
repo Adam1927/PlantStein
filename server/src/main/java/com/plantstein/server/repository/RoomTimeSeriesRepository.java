@@ -9,8 +9,6 @@ import java.util.List;
 
 
 public interface RoomTimeSeriesRepository extends JpaRepository<RoomTimeSeries, Long> {
-    public static final int FIND_FIRST_N = 10;
-
     List<RoomTimeSeries> findFirst10ByRoomIdOrderByTimestampDesc(Long roomId);
 
     @Query("""

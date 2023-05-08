@@ -1,5 +1,8 @@
 package com.plantstein.server.mqtt;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.plantstein.server.AppConfig;
 import com.plantstein.server.dto.CheckPlantConditionsDTO;
 import com.plantstein.server.dto.RoomConditionDTO;
 import com.plantstein.server.model.Moisture;
@@ -9,11 +12,11 @@ import com.plantstein.server.model.Species;
 import com.plantstein.server.repository.PlantRepository;
 import com.plantstein.server.repository.PlantTimeSeriesRepository;
 import com.plantstein.server.repository.RoomRepository;
-import com.plantstein.server.rest.PlantRestController;
+import com.plantstein.server.rest.RoomRestController;
 import com.plantstein.server.util.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.integration.mqtt.support.MqttHeaders;
-import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -23,25 +26,32 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class CheckPlantConditionSchedule {
-    private static final double BRIGHTNESS_SLACK = 0.5;
-    private static final double TEMPERATURE_SLACK = 2.0;
-    private static final double HUMIDITY_SLACK = 5.0;
-
     private final MQTTBeans mqtt;
     private final PlantRepository plantRepository;
     private final RoomRepository roomRepository;
-    private final PlantRestController roomRestController;
+    private final RoomRestController roomRestController;
     private final PlantTimeSeriesRepository plantTimeSeriesRepository;
+    private final ObjectMapper objectMapper;
 
-    @Scheduled(fixedDelay = 1000)
-    public void checkPlantConditions() {
+    @Scheduled(fixedDelay = AppConfig.PLANT_CONDITION_PUBLISH_INTERVAL)
+    public void checkPlantConditions() throws JsonProcessingException {
         for (String clientId : roomRepository.getAllClientIds()) {
-            mqtt.mqttOutBound().handleMessage(
-                    MessageBuilder
-                            .withPayload(getCheckPlantConditions(clientId))
-                            .setHeader(MqttHeaders.TOPIC, "plant-conditions")
-                            .build()
-            );
+            List<CheckPlantConditionsDTO> messages = getCheckPlantConditions(clientId);
+
+            if (!messages.isEmpty()) {
+                mqtt.mqttOutBound().handleMessage(
+                        MessageBuilder
+                                .withPayload(objectMapper.writeValueAsString(messages))
+                                .setHeader(MqttHeaders.TOPIC, AppConfig.Topic.PLANT_CONDITIONS + "/" + clientId)
+                                .build()
+                );
+//            mqtt.mqttOutBound().handleMessage(
+//                    MessageBuilder
+//                            .withPayload("hi client " + clientId)
+//                            .setHeader(MqttHeaders.TOPIC, "plant-conditions/" + clientId)
+//                            .build()
+//            );
+            }
         }
     }
 
@@ -58,7 +68,10 @@ public class CheckPlantConditionSchedule {
 
             Species species = userPlant.getSpecies();
 
-            int brightnessCheck = Utils.checkWithinTargetValue(condition.getBrightness(), species.getPerfectLight(), BRIGHTNESS_SLACK);
+            if (plantRTSEntries.isEmpty())
+                return response;
+
+            int brightnessCheck = Utils.checkWithinTargetValue(condition.getBrightness(), species.getPerfectLight(), AppConfig.BRIGHTNESS_SLACK);
             if (brightnessCheck != 0)
                 response.add(
                         CheckPlantConditionsDTO.builder()
@@ -71,7 +84,7 @@ public class CheckPlantConditionSchedule {
                                 ).build()
                 );
 
-            int temperatureCheck = Utils.checkWithinTargetValue(condition.getTemperature(), species.getPerfectTemperature(), TEMPERATURE_SLACK);
+            int temperatureCheck = Utils.checkWithinTargetValue(condition.getTemperature(), species.getPerfectTemperature(), AppConfig.TEMPERATURE_SLACK);
             if (temperatureCheck != 0)
                 response.add(
                         CheckPlantConditionsDTO.builder()
@@ -83,7 +96,7 @@ public class CheckPlantConditionSchedule {
                                                 : "It's too cold enough for " + userPlant.getNickname() + "!").build()
                 );
 
-            int humidityCheck = Utils.checkWithinTargetValue(condition.getBrightness(), species.getPerfectLight(), HUMIDITY_SLACK);
+            int humidityCheck = Utils.checkWithinTargetValue(condition.getBrightness(), species.getPerfectLight(), AppConfig.HUMIDITY_SLACK);
             if (humidityCheck != 0)
                 response.add(
                         CheckPlantConditionsDTO.builder()

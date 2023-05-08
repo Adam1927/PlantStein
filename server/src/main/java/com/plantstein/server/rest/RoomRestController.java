@@ -95,13 +95,15 @@ public class RoomRestController {
 
         List<RoomTimeSeries> rtsEntries = roomTimeSeriesRepository.findFirst10ByRoomIdOrderByTimestampDesc(id);
 
-        double avgBrightness = rtsEntries.stream()
+        if (rtsEntries.isEmpty()) return new RoomConditionDTO();
+
+        Double avgBrightness = rtsEntries.stream()
                 .mapToDouble(RoomTimeSeries::getBrightness)
                 .average().orElse(0);
-        double avgTemperature = rtsEntries.stream()
+        Double avgTemperature = rtsEntries.stream()
                 .mapToDouble(RoomTimeSeries::getBrightness)
                 .average().orElse(0);
-        double avgHumidity = rtsEntries.stream()
+        Double avgHumidity = rtsEntries.stream()
                 .mapToDouble(RoomTimeSeries::getBrightness)
                 .average().orElse(0);
 
