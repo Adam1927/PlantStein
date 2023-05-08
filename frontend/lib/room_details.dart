@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:plant_stein/utils.dart';
-import 'pot_details.dart';
+import 'pot_details_page.dart';
 import 'package:http/http.dart' as http;
 
 class RoomDetails extends StatefulWidget {
