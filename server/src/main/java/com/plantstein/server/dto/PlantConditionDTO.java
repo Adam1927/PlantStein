@@ -13,7 +13,8 @@ public class PlantConditionDTO extends RoomConditionDTO {
     private Moisture moisture;
 
     @Builder(builderMethodName = "plantConditionDtoBuilder")
-    public PlantConditionDTO(Double brightness, Double temperature, Double humidity, Long plantId, String plantNickname, Moisture moisture) {
+    public PlantConditionDTO(Double brightness, Double temperature, Double humidity, Long plantId, String plantNickname,
+            Moisture moisture) {
         super(brightness, temperature, humidity);
         this.plantId = plantId;
         this.plantNickname = plantNickname;
