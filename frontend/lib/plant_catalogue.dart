@@ -3,10 +3,37 @@ import 'species_data.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class PlantCatalogue extends StatelessWidget {
-  PlantCatalogue({super.key});
+class PlantCatalogue extends StatefulWidget {
+  const PlantCatalogue({super.key});
+
+  @override
+  State<PlantCatalogue> createState() => _PlantCatalogueState();
+}
+
+class _PlantCatalogueState extends State<PlantCatalogue> {
   final controller = TextEditingController();
+
   List<Species> species = allSpecies;
+
+  List<Species> filteredSpecies = allSpecies;
+
+  List<Species> getFilteredSpecies() => species.where((species) {
+        final input = controller.text.trim().toLowerCase();
+        if (input.isEmpty) return true;
+
+        final speciesName = species.name.trim().toLowerCase();
+        return speciesName.contains(input);
+      }).toList();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(() {
+      setState(() {
+        filteredSpecies = getFilteredSpecies();
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,14 +60,14 @@ class PlantCatalogue extends StatelessWidget {
               prefixIcon: Icon(Icons.search),
               hintText: 'Look for a plant here',
             ),
-            onChanged: searchSpecies,
+            // onChanged: searchSpecies,
           ),
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: species.length,
+            itemCount: this.filteredSpecies.length,
             itemBuilder: (context, index) {
-              final species = allSpecies[index];
+              final species = this.filteredSpecies[index];
 
               return Column(
                 children: [
@@ -67,18 +94,4 @@ class PlantCatalogue extends StatelessWidget {
       ],
     );
   }
-
-  void searchSpecies(String query) {
-    final suggestions = allSpecies.where((species) {
-      var species;
-      final speciesName = species.name.toLowerCase();
-      final input = query.toLowerCase();
-
-      return speciesName.contains(input);
-    }).toList();
-
-    setState(() => species = suggestions);
-  }
-
-  void setState(List<Species> Function() param0) {}
 }
