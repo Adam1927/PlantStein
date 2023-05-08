@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:plant_stein/plant_catalogue.dart';
+import 'package:plant_stein/pot_details_page.dart';
 import 'package:plant_stein/settings.dart';
 import 'insert_test_data.dart';
 import 'room_page.dart';
@@ -63,7 +64,7 @@ class _RootPageState extends State<RootPage> {
           centerTitle: true,
           backgroundColor: const Color(0xFFEBEDEB),
         ),
-        body: screens[currentPage],
+        body: const PotDetails(1) /*screens[currentPage]*/,
         backgroundColor: const Color(0xFFEBEDEB),
         bottomNavigationBar: BottomNavigationBar(
           // currentIndex: currentPage,
