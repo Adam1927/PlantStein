@@ -32,18 +32,14 @@ public class Species {
     private Double perfectHumidity;
 
     @NotEmpty
-    @Enumerated(EnumType.ORDINAL)
     private String homeland;
 
-    @NotEmpty
-    @Enumerated(EnumType.ORDINAL)
-    private Difficulty transplanting;
+   @NotEmpty
+   private String botanicalName;
 
-    @NotEmpty
-    @Enumerated(EnumType.ORDINAL)
-    private Difficulty cultivation;
+   @NotEmpty
+   private String bloomTime;
 
     @NotNull
-    @Enumerated(EnumType.ORDINAL)
     private Double maxHeight;
 }
