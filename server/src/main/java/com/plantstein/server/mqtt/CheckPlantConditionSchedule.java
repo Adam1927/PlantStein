@@ -14,6 +14,7 @@ import com.plantstein.server.repository.PlantTimeSeriesRepository;
 import com.plantstein.server.repository.RoomRepository;
 import com.plantstein.server.rest.RoomRestController;
 import com.plantstein.server.util.Utils;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.integration.mqtt.support.MqttHeaders;
 import org.springframework.integration.support.MessageBuilder;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 @Component
 @RequiredArgsConstructor
@@ -33,8 +35,16 @@ public class CheckPlantConditionSchedule {
     private final PlantTimeSeriesRepository plantTimeSeriesRepository;
     private final ObjectMapper objectMapper;
 
+    private final CountDownLatch dbInitializedLatch = new CountDownLatch(1);
+
+    @PostConstruct
+    public void init() {
+        dbInitializedLatch.countDown();
+    }
+
     @Scheduled(fixedDelay = AppConfig.PLANT_CONDITION_PUBLISH_INTERVAL)
-    public void checkPlantConditions() throws JsonProcessingException {
+    public void checkPlantConditions() throws JsonProcessingException, InterruptedException {
+        dbInitializedLatch.await();
         for (String clientId : roomRepository.getAllClientIds()) {
             List<CheckPlantConditionsDTO> messages = getCheckPlantConditions(clientId);
 
@@ -57,9 +67,10 @@ public class CheckPlantConditionSchedule {
 
     public List<CheckPlantConditionsDTO> getCheckPlantConditions(String clientId) {
         List<CheckPlantConditionsDTO> response = new ArrayList<>();
+        
         for (Plant userPlant : plantRepository.findByClientId(clientId)) {
             RoomConditionDTO condition = roomRestController.getCondition(userPlant.getId());
-            List<PlantTimeSeries> plantRTSEntries = plantTimeSeriesRepository.findFirst10ByIdOrderByTimestampDesc(userPlant.getId());
+            List<PlantTimeSeries> plantRTSEntries = plantTimeSeriesRepository.findFirst10ByPlantIdOrderByTimestampDesc(userPlant.getId());
             Moisture averageMoisture = Moisture.getAverageMoisture(
                     plantRTSEntries.stream()
                             .map(PlantTimeSeries::getMoisture)

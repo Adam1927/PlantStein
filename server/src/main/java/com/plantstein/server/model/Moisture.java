@@ -7,6 +7,19 @@ import java.util.Map;
 public enum Moisture {
     TOO_DRY, OKAY, TOO_WET;
 
+
+    public static Moisture fromString(String moistureString) {
+        Double value = Double.parseDouble(moistureString);
+        if (value < 300)
+            return TOO_DRY;
+        if (value < 700)
+            return OKAY;
+        else if (value > 700)
+            return TOO_WET;
+        
+        throw new IllegalArgumentException("Invalid moisture string: " + moistureString);
+    }
+
     public static Moisture getAverageMoisture(List<Moisture> list) {
         Map<Moisture, Integer> countMap = new HashMap<>();
         for (Moisture moisture : list) {

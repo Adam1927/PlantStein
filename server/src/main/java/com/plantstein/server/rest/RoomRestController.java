@@ -101,10 +101,10 @@ public class RoomRestController {
                 .mapToDouble(RoomTimeSeries::getBrightness)
                 .average().orElse(0);
         Double avgTemperature = rtsEntries.stream()
-                .mapToDouble(RoomTimeSeries::getBrightness)
+                .mapToDouble(RoomTimeSeries::getTemperature)
                 .average().orElse(0);
         Double avgHumidity = rtsEntries.stream()
-                .mapToDouble(RoomTimeSeries::getBrightness)
+                .mapToDouble(RoomTimeSeries::getHumidity)
                 .average().orElse(0);
 
         return RoomConditionDTO.builder()

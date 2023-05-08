@@ -6,10 +6,7 @@ public class AppConfig {
     }
 
     public enum Topic {
-        TEMPERATURE("temperature"),
-        HUMIDITY("humidity"),
-        BRIGHTNESS("brightness"),
-        MOISTURE("moisture"),
+        TIMESERIES("timeseries"),
         PLANT_CONDITIONS("plant-conditions");
         private final String stringRepresentation;
 
