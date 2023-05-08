@@ -3,14 +3,20 @@ package com.plantstein.server.dto;
 import com.plantstein.server.model.Moisture;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-public class PlantConditionDTO {
+@NoArgsConstructor
+public class PlantConditionDTO extends RoomConditionDTO {
+    private Long plantId;
     private String plantNickname;
-    private double temperature;
-    private double brightness;
-    private double humidity;
     private Moisture moisture;
 
+    @Builder(builderMethodName = "plantConditionDtoBuilder")
+    public PlantConditionDTO(Double brightness, Double temperature, Double humidity, Long plantId, String plantNickname, Moisture moisture) {
+        super(brightness, temperature, humidity);
+        this.plantId = plantId;
+        this.plantNickname = plantNickname;
+        this.moisture = moisture;
+    }
 }

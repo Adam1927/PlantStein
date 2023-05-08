@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -19,9 +20,9 @@ import java.net.InetAddress;
                         "This API is automatically generated from the server's code."
         )
 )
+@EnableScheduling
 @SpringBootApplication
 public class PlantSteinServer {
-
     public static void main(String[] args) {
         SpringApplication.run(PlantSteinServer.class, args);
 
@@ -33,5 +34,6 @@ public class PlantSteinServer {
             System.out.println("Could not determine your local IP address.");
         }
     }
+
 
 }
