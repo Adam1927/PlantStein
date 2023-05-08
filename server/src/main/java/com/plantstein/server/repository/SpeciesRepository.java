@@ -1,5 +1,6 @@
 package com.plantstein.server.repository;
 
+import com.plantstein.server.model.Plant;
 import com.plantstein.server.model.Species;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
