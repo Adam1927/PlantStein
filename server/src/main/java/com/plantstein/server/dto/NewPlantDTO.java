@@ -6,5 +6,5 @@ import lombok.Data;
 public class NewPlantDTO {
     private String nickname;
     private String species;
-    private String roomName;
+    private Long roomId;
 }

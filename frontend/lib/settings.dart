@@ -13,7 +13,7 @@ class Settings extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const RoomDetails("Kitchen")));
+                builder: (context) => const RoomDetails(1, "Kitchen")));
       },
     ));
   }
