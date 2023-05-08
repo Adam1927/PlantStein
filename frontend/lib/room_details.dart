@@ -6,7 +6,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:plant_stein/utils.dart';
-import 'bottom_navigation.dart';
 import 'pot_details.dart';
 import 'package:http/http.dart' as http;
 
@@ -46,7 +45,6 @@ class _RoomDetailsState extends State<RoomDetails> {
           centerTitle: true,
           backgroundColor: const Color(0xFFEBEDEB),
         ),
-        bottomNavigationBar: const BottomNavigation(),
         body: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
