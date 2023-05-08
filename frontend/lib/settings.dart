@@ -6,15 +6,6 @@ class Settings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: ElevatedButton(
-      child: const Text('Kitchen'),
-      onPressed: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const RoomDetails(1, "Kitchen")));
-      },
-    ));
+    return Text("Settings");
   }
 }

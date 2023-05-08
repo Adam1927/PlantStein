@@ -5,7 +5,6 @@ import 'package:plant_stein/plant_catalogue.dart';
 import 'package:plant_stein/settings.dart';
 import 'insert_test_data.dart';
 import 'room_page.dart';
-import 'bottom_navigation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,29 +41,54 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
-  int currentPage = 0;
+  int currentPage = 1;
+
   final screens = [
     Settings(),
-    PlantCatalogue(),
     RoomPage(),
+    PlantCatalogue(),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        toolbarHeight: 150,
-        title: Image.asset(
-          'images/logo.png',
-          fit: BoxFit.contain,
-          height: 70,
+        appBar: AppBar(
+          elevation: 0.0,
+          toolbarHeight: 150,
+          title: Image.asset(
+            'images/logo.png',
+            fit: BoxFit.contain,
+            height: 70,
+          ),
+          centerTitle: true,
+          backgroundColor: const Color(0xFFEBEDEB),
         ),
-        centerTitle: true,
+        body: screens[currentPage],
         backgroundColor: const Color(0xFFEBEDEB),
-      ),
-      body: PlantCatalogue(),
-      backgroundColor: const Color(0xFFEBEDEB),
-      bottomNavigationBar: const BottomNavigation(),
-    );
+        bottomNavigationBar: BottomNavigationBar(
+          // currentIndex: currentPage,
+          onTap: (index) => {
+            setState(() {
+              currentPage = index;
+            })
+          },
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('images/settings.png'),
+                  color: Color(0xFF5F725F)),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('images/home.png'),
+                  color: Color(0xFF5F725F)),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('images/catalogue.png'),
+                  color: Color(0xFF5F725F)),
+              label: '',
+            ),
+          ],
+        ));
   }
 }

@@ -20,7 +20,27 @@ extension RandomListItem<T> on List<T> {
   }
 }
 
-Future<bool> isDbEmpty() async {
+void insertTestData() async {
+  if (!await _isDbEmpty()) return;
+
+  List<String> species = await _getSpecies();
+
+  Random random = Random();
+
+  for (String room in rooms) {
+    await _insertRoom(room);
+  }
+
+  for (String room in rooms) {
+    for (int i = 0; i < random.nextInt(10) + 3; i++) {
+      await _insertPlant(plantNames.randomItem(), species.randomItem(),
+          random.nextInt(rooms.length) + 1);
+    }
+  }
+  debugPrint("inserted test data");
+}
+
+Future<bool> _isDbEmpty() async {
   var url = Uri.http(dotenv.env["SERVER"]!, 'room/all');
   debugPrint("test:" + dotenv.env["CLIENT"]!);
   final response =
@@ -29,7 +49,7 @@ Future<bool> isDbEmpty() async {
   return jsonData.length == 0;
 }
 
-getSpecies() async {
+_getSpecies() async {
   var url = Uri.http(dotenv.env["SERVER"]!, 'species/all');
   final response =
       await http.get(url, headers: {'clientId': dotenv.env["CLIENT"]!});
@@ -37,26 +57,7 @@ getSpecies() async {
   return List<String>.from(jsonData.map((item) => item["name"]));
 }
 
-void insertTestData() async {
-  if (!await isDbEmpty()) return;
-
-  List<String> species = await getSpecies();
-
-  Random random = Random();
-
-  for (String room in rooms) {
-    await insertRoom(room);
-  }
-
-  for (String room in rooms) {
-    for (int i = 0; i < random.nextInt(10) + 3; i++) {
-      await insertPlant(plantNames.randomItem(), species.randomItem(),
-          random.nextInt(rooms.length) + 1);
-    }
-  }
-}
-
-Future<Response> insertRoom(String roomName) {
+Future<Response> _insertRoom(String roomName) {
   var url = Uri.http(dotenv.env["SERVER"]!, 'room/add');
   return http.post(url,
       headers: {
@@ -67,7 +68,7 @@ Future<Response> insertRoom(String roomName) {
       body: roomName);
 }
 
-Future<Response> insertPlant(String name, String species, int room) {
+Future<Response> _insertPlant(String name, String species, int room) {
   var url = Uri.http(dotenv.env["SERVER"]!, 'plant/add');
   return http.post(url,
       headers: {
