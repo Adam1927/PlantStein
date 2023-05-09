@@ -27,7 +27,7 @@ public class PlantTimeSeries {
     @NotNull
     private Timestamp timestamp;
 
-    @NotNull
-    @Enumerated(EnumType.ORDINAL)
+    @NotEmpty
+    @Enumerated(EnumType.STRING)
     private Moisture moisture;
 }
