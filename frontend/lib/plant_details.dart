@@ -2,15 +2,22 @@ class PlantDetails {
   final String plantNickname;
   final String? moisture;
   final double? brightness;
+  final double? perfectBrightness;
   final double? temperature;
+  final double? perfectTemperature;
   final double? humidity;
+  final double? perfectHumidity;
 
-  const PlantDetails(
-      {required this.plantNickname,
-      this.brightness,
-      this.moisture,
-      this.temperature,
-      this.humidity});
+  const PlantDetails({
+    required this.plantNickname,
+    this.brightness,
+    this.moisture,
+    this.temperature,
+    this.humidity,
+    this.perfectTemperature,
+    this.perfectHumidity,
+    this.perfectBrightness,
+  });
 
   factory PlantDetails.fromJson(Map<String, dynamic> json) {
     String moisture;
@@ -32,15 +39,10 @@ class PlantDetails {
       brightness: json['brightness'],
       temperature: json['temperature'],
       humidity: json['humidity'],
+      perfectTemperature: json['perfectTemperature'],
+      perfectHumidity: json['perfectHumidity'],
+      perfectBrightness: json['perfectBrightness'],
       moisture: moisture,
     );
   }
-
-  Map<String, dynamic> toJson() => {
-        'plantNickname': plantNickname,
-        'brightness': brightness,
-        'moisture': moisture,
-        'temperature': temperature,
-        'humidity': humidity,
-      };
 }

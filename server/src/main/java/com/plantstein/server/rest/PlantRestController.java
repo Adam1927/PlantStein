@@ -135,8 +135,11 @@ public class PlantRestController {
                 .plantId(id)
                 .plantNickname(plant.getNickname())
                 .temperature(condition.getTemperature())
+                .perfectTemperature(plant.getSpecies().getPerfectTemperature())
                 .humidity(condition.getHumidity())
+                .perfectHumidity(plant.getSpecies().getPerfectHumidity())
                 .brightness(condition.getBrightness())
+                .perfectBrightness(plant.getSpecies().getPerfectLight())
                 .moisture(averageMoisture)
                 .build();
     }

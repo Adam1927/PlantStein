@@ -15,6 +15,9 @@ public class PlantConditionDTO {
     private String plantNickname;
     private Moisture moisture;
     private Double brightness;
+    private Double perfectBrightness;
     private Double temperature;
+    private Double perfectTemperature;
     private Double humidity;
+    private Double perfectHumidity;
 }

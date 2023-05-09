@@ -13,10 +13,13 @@ class PotDetails extends StatefulWidget {
   final int potId;
   const PotDetails(this.potId, {super.key});
 
+  @override
   State<PotDetails> createState() => _PotDetailsState();
 }
 
 class _PotDetailsState extends State<PotDetails> {
+  Timer? _timer;
+
   Future<PlantDetails> plantDetails = Future<PlantDetails>.value(
     const PlantDetails(
       plantNickname: 'Loading...',
@@ -32,31 +35,34 @@ class _PotDetailsState extends State<PotDetails> {
     super.initState();
     plantDetails = getPlantDetails();
 
-    Timer.periodic(Duration(seconds: 5), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
       setState(() {
         plantDetails = getPlantDetails();
       });
     });
   }
 
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
   Future<PlantDetails> getPlantDetails() async {
     var url =
         Uri.http(dotenv.env["SERVER"]!, 'plant/condition/${widget.potId}');
     final response = await http.get(url);
-    debugPrint(response.body);
     return PlantDetails.fromJson(jsonDecode(response.body));
   }
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("loading pot details for pot ");
     return Scaffold(
       body: FutureBuilder<PlantDetails>(
           future: plantDetails,
           builder: (context, snapshot) {
             if (!snapshot.hasData) return Container();
 
-            debugPrint(snapshot.data.toString());
             PlantDetails plantDetails = snapshot.data!;
 
             return SingleChildScrollView(
@@ -102,9 +108,11 @@ class _PotDetailsState extends State<PotDetails> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "${plantDetails.moisture}",
+                              plantDetails.moisture == null
+                                  ? 'No data'
+                                  : "${plantDetails.moisture}",
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16.0,
                               ),
@@ -141,20 +149,22 @@ class _PotDetailsState extends State<PotDetails> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              '${plantDetails.temperature}\nCurrent',
+                              plantDetails.temperature == null
+                                  ? 'No data'
+                                  : '${plantDetails.temperature}°C\nCurrent',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16.0,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 40.0,
                             ),
                             Text(
-                              '#\nPreferred',
+                              '${plantDetails.perfectTemperature}°C\nPreferred',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16.0,
                               ),
@@ -191,20 +201,22 @@ class _PotDetailsState extends State<PotDetails> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              '${plantDetails.humidity}\nCurrent',
+                              plantDetails.humidity == null
+                                  ? 'No data'
+                                  : '${plantDetails.humidity}%\nCurrent',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16.0,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 40.0,
                             ),
                             Text(
-                              '#\nPreferred',
+                              '${plantDetails.perfectHumidity}%\nPreferred',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16.0,
                               ),
@@ -241,20 +253,22 @@ class _PotDetailsState extends State<PotDetails> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              '${plantDetails.brightness}\nCurrent',
+                              plantDetails.brightness == null
+                                  ? 'No data'
+                                  : '${plantDetails.brightness}\nCurrent',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16.0,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 40.0,
                             ),
                             Text(
-                              '#\nPreferred',
+                              '${plantDetails.perfectBrightness}\nPreferred',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16.0,
                               ),
