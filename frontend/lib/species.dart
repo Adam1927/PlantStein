@@ -1,5 +1,4 @@
 class Species {
-  final int id;
   final String name;
   final String homeland;
   final double perfectTemperature;
@@ -11,7 +10,7 @@ class Species {
   final double maxHeight;
 
   const Species(
-      {required this.id,
+      {
       required this.name,
       required this.homeland,
       required this.perfectTemperature,
@@ -23,7 +22,6 @@ class Species {
       required this.botanicalName});
 
   factory Species.fromJson(Map<String, dynamic> json) => Species(
-        id: json['id'],
         name: json['name'],
         homeland: json['homeland'],
         maxHeight: json['maxHeight'],
@@ -36,7 +34,6 @@ class Species {
       );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
         'title': name,
         'homeland': homeland,
         'perfectTemperature': perfectTemperature,

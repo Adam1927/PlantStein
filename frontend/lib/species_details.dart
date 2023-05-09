@@ -48,28 +48,24 @@ class SpeciesDetailsPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Text(
-                        'Species: ${species.name}',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
-                      ),
                       const SizedBox(height: 10),
                       Text(
                         'Height: ${species.maxHeight}',
                         style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        'Botanical name: Phalaenopsis spp',
+                      Text(
+                        'Botanical name: ${species.botanicalName}',
                         style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        'Homeland: Asia, Australia',
+                      Text(
+                        'Homeland: ${species.homeland}',
                         style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        'Bloom time: Varies',
+                      Text(
+                        'Bloom time: ${species.bloomTime}',
                         style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                       Row(
@@ -120,28 +116,28 @@ class SpeciesDetailsPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(width: 20),
-                const Expanded(
+                Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(height: 20),
                       Text(
-                        'Perfect temperature: 24',
+                        'Perfect temperature: ${species.perfectTemperature}',
                         style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                       SizedBox(height: 10),
                       Text(
-                        'Perfect humidity: 60%',
+                        'Perfect humidity: ${species.perfectHumidity}',
                         style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                       SizedBox(height: 10),
                       Text(
-                        'Perfect moisture: 60%',
+                        'Perfect moisture: ${species.perfectMoisture}',
                         style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                       SizedBox(height: 10),
                       Text(
-                        'Perfect light: 12000 lux',
+                        'Perfect light: ${species.perfectLight}',
                         style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                     ],
