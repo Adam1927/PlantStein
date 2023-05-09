@@ -67,9 +67,9 @@ public class CheckPlantConditionSchedule {
 
     public List<CheckPlantConditionsDTO> getCheckPlantConditions(String clientId) {
         List<CheckPlantConditionsDTO> response = new ArrayList<>();
-        
+
         for (Plant userPlant : plantRepository.findByClientId(clientId)) {
-            RoomConditionDTO condition = roomRestController.getCondition(userPlant.getId());
+            RoomConditionDTO condition = roomRestController.getCondition(userPlant.getRoom().getId());
             List<PlantTimeSeries> plantRTSEntries = plantTimeSeriesRepository.findFirst10ByPlantIdOrderByTimestampDesc(userPlant.getId());
             Moisture averageMoisture = Moisture.getAverageMoisture(
                     plantRTSEntries.stream()

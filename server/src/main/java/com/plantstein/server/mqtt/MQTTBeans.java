@@ -110,11 +110,11 @@ public class MQTTBeans {
                 } catch (JsonProcessingException e) {
                     LOGGER.error("Error parsing timeseries" + message.getPayload().toString());
                 } catch (NotFoundException e) {
-                    LOGGER.error("Plant not found, " + message.getPayload().toString());
+                    LOGGER.error("Received timeseries, but that plant could not be found, " + message.getPayload().toString());
                 }
             } else if (!Arrays.stream(AppConfig.Topic.values()).map(AppConfig.Topic::toString).toList()
                     .contains(topicType))
-                System.out.println("Unknown topic: " + topic);
+                System.out.println("Incoming mqtt message on unknown topic: " + topic);
         };
     }
 
