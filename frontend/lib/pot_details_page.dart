@@ -273,7 +273,7 @@ class _PotDetailsState extends State<PotDetails> {
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0XFF5F725F),
         title: Text(
-          'Create a pot',
+          'Rename plant',
           textAlign: TextAlign.center,
           style: GoogleFonts.playfairDisplay(color: Colors.white),
         ),
@@ -286,7 +286,7 @@ class _PotDetailsState extends State<PotDetails> {
               controller: newNameController,
               autofocus: true,
               decoration: const InputDecoration(
-                  hintText: 'Enter pot name',
+                  hintText: 'Enter new pot name',
                   fillColor: Colors.white,
                   filled: true,
                   border: OutlineInputBorder(),
