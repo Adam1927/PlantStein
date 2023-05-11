@@ -1,5 +1,10 @@
+import 'dart:convert';
+
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:plant_stein/species_details.dart';
+
 import 'species.dart';
-import 'species_data.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,19 +16,17 @@ class PlantCatalogue extends StatefulWidget {
 }
 
 class _PlantCatalogueState extends State<PlantCatalogue> {
-  final controller = TextEditingController();
+    final controller = TextEditingController();
+   List<Species> species = [];
+   List<Species> filteredSpecies = [];
 
-  List<Species> species = allSpecies;
-
-  List<Species> filteredSpecies = allSpecies;
-
-  List<Species> getFilteredSpecies() => species.where((species) {
-        final input = controller.text.trim().toLowerCase();
-        if (input.isEmpty) return true;
-
-        final speciesName = species.name.trim().toLowerCase();
-        return speciesName.contains(input);
-      }).toList();
+  Future<List<Species>> getSpecies() async {
+    var url = Uri.http(dotenv.env["SERVER"]!, 'species/all');
+    final response =
+        await http.get(url, headers: {'clientId': dotenv.env["CLIENT"]!});
+    final jsonData = json.decode(response.body);
+    return List<Species>.from(jsonData.map((item) => Species.fromJson(item)));
+  }
 
   @override
   void initState() {
@@ -33,7 +36,24 @@ class _PlantCatalogueState extends State<PlantCatalogue> {
         filteredSpecies = getFilteredSpecies();
       });
     });
+
+    getSpecies().then((List<Species> fetchedSpecies) {
+      setState(() {
+        species = fetchedSpecies;
+        filteredSpecies = getFilteredSpecies();
+      });
+    });
   }
+
+  List<Species> getFilteredSpecies() => species.where((species) {
+        final input = controller.text.trim().toLowerCase();
+        if (input.isEmpty) return true;
+
+        final speciesName = species.name.trim().toLowerCase();
+        return speciesName.contains(input);
+      }).toList();
+
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -83,10 +103,17 @@ class _PlantCatalogueState extends State<PlantCatalogue> {
                       'images/pot.png',
                       fit: BoxFit.fitHeight,
                     ),
+                    onTap: () {
+                      Navigator.push(
+                           context,
+                          MaterialPageRoute(
+                           builder: (context) => 
+                           SpeciesDetailsPage(species: species)));
+                            },
                     title: Text(species.name),
-                    subtitle: Text(species.country),
+                    subtitle: Text(species.homeland),
                   ),
-                ],
+                ], 
               );
             },
           ),
