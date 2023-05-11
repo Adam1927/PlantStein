@@ -347,7 +347,7 @@ class _PotDetailsState extends State<PotDetails> {
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0XFF5F725F),
         title: Text(
-          'Create a pot',
+          "Change plant's room",
           textAlign: TextAlign.center,
           style: GoogleFonts.playfairDisplay(color: Colors.white),
         ),
@@ -362,7 +362,7 @@ class _PotDetailsState extends State<PotDetails> {
               width: 232,
               controller: newRoomController,
               enableFilter: true,
-              hintText: 'Enter pot name',
+              hintText: 'Choose room',
               dropdownMenuEntries: roomEntries.map((Room room) {
                 return DropdownMenuEntry<Room>(
                   value: room,
