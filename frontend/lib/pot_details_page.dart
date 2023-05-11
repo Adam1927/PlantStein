@@ -2,11 +2,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'plant_details.dart';
 import 'package:http/http.dart' as http;
 
 class PotDetails extends StatefulWidget {
@@ -314,15 +311,9 @@ class _PotDetailsState extends State<PotDetails> {
                 backgroundColor: MaterialStatePropertyAll<Color>(Colors.white)),
             onPressed: () async {
               http.Response response = await editPlantName(
-                  widget.potId, newNameController.text); // load pots again
+                  potId, newNameController.text); // load pots again
               debugPrint(response.statusCode.toString());
-              if (response.statusCode == 201) {
-                int potId = json.decode(response.body)["id"];
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PotDetails(potId)));
-              } else {
-                Navigator.of(context).pop();
-              }
+              Navigator.of(context).pop();
             },
             child: Text(
               'SAVE',
@@ -336,18 +327,21 @@ class _PotDetailsState extends State<PotDetails> {
   }
 
   Future<http.Response> editPlantName(int plant, String newName) {
-    var url = Uri.http(dotenv.env["SERVER"]!, 'plant/rename/{id}/{newName}');
-    return http.put(url,
-        headers: {
-          'clientId': dotenv.env["CLIENT"]!,
-          "Accept": "application/json",
-          "content-type": "application/json"
-        },
-        body: jsonEncode({"id": plant, "newName": newName}));
+    var url = Uri.http(dotenv.env["SERVER"]!, 'plant/rename/$plant/$newName');
+    return http.put(
+      url,
+      headers: {
+        'clientId': dotenv.env["CLIENT"]!,
+        "Accept": "application/json",
+        "content-type": "application/json"
+      },
+    );
   }
 
   Future openEditPlantRoom(BuildContext context, int potId) async {
     final TextEditingController newRoomController = TextEditingController();
+    final List<Room> roomEntries = await getRooms();
+    Room? selectedRoom;
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -362,16 +356,22 @@ class _PotDetailsState extends State<PotDetails> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            TextField(
+            DropdownMenu<Room>(
+              inputDecorationTheme: const InputDecorationTheme(
+                  filled: true, fillColor: Colors.white),
+              width: 232,
               controller: newRoomController,
-              autofocus: true,
-              decoration: const InputDecoration(
-                  hintText: 'Enter pot name',
-                  fillColor: Colors.white,
-                  filled: true,
-                  border: OutlineInputBorder(),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white))),
+              enableFilter: true,
+              hintText: 'Enter pot name',
+              dropdownMenuEntries: roomEntries.map((Room room) {
+                return DropdownMenuEntry<Room>(
+                  value: room,
+                  label: room.name,
+                );
+              }).toList(),
+              onSelected: (Room? newRoom) {
+                selectedRoom = newRoom;
+              },
             ),
           ],
         ),
@@ -394,15 +394,9 @@ class _PotDetailsState extends State<PotDetails> {
                 backgroundColor: MaterialStatePropertyAll<Color>(Colors.white)),
             onPressed: () async {
               http.Response response = await editPlantRoom(
-                  widget.potId, newRoomController.text); // load pots again
+                  potId, selectedRoom?.id); // load pots again
               debugPrint(response.statusCode.toString());
-              if (response.statusCode == 201) {
-                int potId = json.decode(response.body)["id"];
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PotDetails(potId)));
-              } else {
-                Navigator.of(context).pop();
-              }
+              Navigator.of(context).pop();
             },
             child: Text(
               'SAVE',
@@ -415,15 +409,31 @@ class _PotDetailsState extends State<PotDetails> {
     );
   }
 
-  Future<http.Response> editPlantRoom(int plant, String newRoom) {
-    var url = Uri.http(
-        dotenv.env["SERVER"]!, 'plant/change-room/{plantId}/{newRoom}');
-    return http.put(url,
-        headers: {
-          'clientId': dotenv.env["CLIENT"]!,
-          "Accept": "application/json",
-          "content-type": "application/json"
-        },
-        body: jsonEncode({"plantId": plant, "newRoom": newRoom}));
+  Future<http.Response> editPlantRoom(int plant, int? newRoom) {
+    var url =
+        Uri.http(dotenv.env["SERVER"]!, 'plant/change-room/$plant/$newRoom');
+    return http.put(
+      url,
+      headers: {
+        'clientId': dotenv.env["CLIENT"]!,
+        "Accept": "application/json",
+        "content-type": "application/json"
+      },
+    );
   }
+
+  Future<List<Room>> getRooms() async {
+    var url = Uri.http(dotenv.env["SERVER"]!, 'room/all');
+    final response =
+        await http.get(url, headers: {'clientId': dotenv.env["CLIENT"]!});
+    final jsonData = json.decode(response.body);
+    return List<Room>.from(
+        jsonData.map((item) => Room(item["id"], item["name"])));
+  }
+}
+
+class Room {
+  int id;
+  String name;
+  Room(this.id, this.name);
 }
