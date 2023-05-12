@@ -35,7 +35,7 @@ class _PotDetailsState extends State<PotDetails> {
     super.initState();
     plantDetails = getPlantDetails();
 
-    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 2), (timer) {
       setState(() {
         plantDetails = getPlantDetails();
       });

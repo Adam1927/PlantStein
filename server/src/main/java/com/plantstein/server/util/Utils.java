@@ -20,4 +20,9 @@ public class Utils {
             return 0;
         }
     }
+    
+    public static double roundToDecimalPlaces(double value, int decimalPlaces) {
+        double scaleFactor = Math.pow(10, decimalPlaces);
+        return Math.round(value * scaleFactor) / scaleFactor;
+    }
 }

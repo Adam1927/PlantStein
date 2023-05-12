@@ -9,6 +9,11 @@
 - Use flutter run or your IDE to start the app
 - The flutter app should automatically add some test data. Plant #1 will be the plant the microcontroller sends data to.
 - If you wish to emulate the microcontroller, use e.g. `mosquitto_pub -h localhost -m "{\"brightness\":700.0,\"temperature\":22,\"humidity\":70.0,\"moisture\":200.0}" -t "timeseries/1"` to publish mocked sensor data
+- Now start the microcontroller (refer to the microcontroller README for more information)
+
+Make sure of the following:
+
+- Start the server first, then the app (so that it can create mock data), then the microcontroller (so that the room/plant for the microcontroller data actually exists)
 
 ## Team Information
 

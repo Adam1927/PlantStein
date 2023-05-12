@@ -14,9 +14,9 @@ public enum Moisture {
             return TOO_DRY;
         if (value < 700)
             return OKAY;
-        else if (value > 700)
+        else if (value >= 700)
             return TOO_WET;
-        
+
         throw new IllegalArgumentException("Invalid moisture string: " + moistureString);
     }
 

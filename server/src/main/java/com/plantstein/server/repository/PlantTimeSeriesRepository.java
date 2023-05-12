@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface PlantTimeSeriesRepository extends JpaRepository<PlantTimeSeries, Long> {
-    List<PlantTimeSeries> findFirst10ByPlantIdOrderByTimestampDesc(Long plantId);
+    List<PlantTimeSeries> findFirst3ByPlantIdOrderByTimestampDesc(Long plantId);
 }

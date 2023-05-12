@@ -9,20 +9,20 @@ import java.util.List;
 
 
 public interface RoomTimeSeriesRepository extends JpaRepository<RoomTimeSeries, Long> {
-    List<RoomTimeSeries> findFirst10ByRoomIdOrderByTimestampDesc(Long roomId);
+    List<RoomTimeSeries> findFirst3ByRoomIdOrderByTimestampDesc(Long roomId);
 
     @Query("""
-                SELECT 
-                    CAST(rts.timestamp AS DATE) as day, 
+                SELECT
+                    CAST(rts.timestamp AS DATE) as day,
                     DAYNAME(rts.timestamp) as weekday,
-                    AVG(rts.brightness) as avg_brightness, 
-                    AVG(rts.temperature) as avg_temperature, 
-                    AVG(rts.humidity) as avg_humidity 
-                FROM 
-                    RoomTimeSeries rts 
-                WHERE 
-                    rts.timestamp >= ?1 
-                GROUP BY 
+                    ROUND(AVG(rts.brightness), 2) as avg_brightness,
+                    ROUND(AVG(rts.temperature), 2) as avg_temperature,
+                    ROUND(AVG(rts.humidity), 2) as avg_humidity
+                FROM
+                    RoomTimeSeries rts
+                WHERE
+                    rts.timestamp >= ?1
+                GROUP BY
                     CAST(rts.timestamp AS DATE),
                     DAYNAME(rts.timestamp)
             """)

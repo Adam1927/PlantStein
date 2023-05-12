@@ -124,7 +124,7 @@ public class PlantRestController {
                 .orElseThrow(() -> new NotFoundException("Plant " + id + " does not exist"));
         RoomConditionDTO condition = roomRestController.getCondition(plant.getRoom().getId());
 
-        List<PlantTimeSeries> plantRTSEntries = plantTimeSeriesRepository.findFirst10ByPlantIdOrderByTimestampDesc(id);
+        List<PlantTimeSeries> plantRTSEntries = plantTimeSeriesRepository.findFirst3ByPlantIdOrderByTimestampDesc(id);
         Moisture averageMoisture = Moisture.getAverageMoisture(
                 plantRTSEntries.stream()
                         .map(PlantTimeSeries::getMoisture)

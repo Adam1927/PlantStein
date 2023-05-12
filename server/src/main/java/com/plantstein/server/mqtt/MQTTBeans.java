@@ -13,6 +13,7 @@ import com.plantstein.server.repository.PlantRepository;
 import com.plantstein.server.repository.PlantTimeSeriesRepository;
 import com.plantstein.server.repository.RoomRepository;
 import com.plantstein.server.repository.RoomTimeSeriesRepository;
+import com.plantstein.server.util.Utils;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 
 
@@ -52,6 +54,7 @@ public class MQTTBeans {
         String[] uri = new String[]{"tcp://localhost:1883"};
         options.setServerURIs(uri);
         options.setCleanSession(true);
+        options.setAutomaticReconnect(true);
 
         factory.setConnectionOptions(options);
         return factory;
@@ -78,15 +81,14 @@ public class MQTTBeans {
         return message -> {
             String topic = message.getHeaders().get(MqttHeaders.RECEIVED_TOPIC).toString();
             String topicType = topic.split("/")[0];
-            String plantId = topic.split("/")[1];
+            String plantId = topic.contains("/") ? topic.split("/")[1] : null;
 
 
             if (AppConfig.Topic.TIMESERIES.toString().equals(topicType)) {
                 try {
                     IncomingTimeSeriesDTO timeseries = objectMapper.readValue(message.getPayload().toString(), IncomingTimeSeriesDTO.class);
                     System.out.println("Timeseries: " + timeseries.toString());
-                    //TODO: Save timeseries to database
-
+                    DecimalFormat decimalFormat = new DecimalFormat("#.00");
 
                     Plant plant = plantRepository.findById(Long.parseLong(plantId)).orElseThrow(() -> new NotFoundException("Plant " + plantId + " not found"));
                     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -95,9 +97,9 @@ public class MQTTBeans {
                             RoomTimeSeries.builder()
                                     .room(plant.getRoom())
                                     .timestamp(timestamp)
-                                    .temperature(Double.valueOf(timeseries.getTemperature()))
-                                    .humidity(Double.valueOf(timeseries.getHumidity()))
-                                    .brightness(Double.valueOf(timeseries.getBrightness()))
+                                    .temperature(Utils.roundToDecimalPlaces(timeseries.getTemperature(), 2))
+                                    .humidity(Utils.roundToDecimalPlaces(timeseries.getHumidity(), 2))
+                                    .brightness(timeseries.getBrightness())
                                     .build()
                     );
                     plantTimeSeriesRepository.save(
