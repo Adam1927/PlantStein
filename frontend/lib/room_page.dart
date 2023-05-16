@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -30,15 +32,23 @@ class _RoomPageState extends State<RoomPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [const SizedBox(height: 30), ...getRoomRows()],
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [const SizedBox(height: 30), ...getRoomRows()],
+          ),
         ),
-      ),
-    );
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () async {
+            final result = await openCreateRoom(context);
+          },
+          backgroundColor: const Color(0xFF5F725F),
+          label: const Text("Add Room"),
+          icon: const Icon(Icons.add),
+        ),
+        resizeToAvoidBottomInset: false);
   }
 
   Widget getRoomButton(int roomId, String roomName) {
@@ -129,5 +139,82 @@ class _RoomPageState extends State<RoomPage> {
     }
 
     return result;
+  }
+
+  Future openCreateRoom(BuildContext context) async {
+    final TextEditingController nameController = TextEditingController();
+
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0XFF5F725F),
+        title: Text(
+          'Create a room',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.playfairDisplay(color: Colors.white),
+        ),
+        content: TextField(
+          controller: nameController,
+          autofocus: true,
+          decoration: const InputDecoration(
+              hintText: 'Enter room name',
+              fillColor: Colors.white,
+              filled: true,
+              border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white))),
+        ),
+        actions: [
+          TextButton(
+            style: const ButtonStyle(
+                backgroundColor:
+                    MaterialStatePropertyAll<Color>(Color(0xFFA85032))),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              'CANCEL',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.playfairDisplay(color: Colors.white),
+            ),
+          ),
+          TextButton(
+            style: const ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll<Color>(Colors.white)),
+            onPressed: () async {
+              http.Response response = await saveNewRoom(nameController.text);
+              loadRooms(); // load rooms again
+              debugPrint(response.statusCode.toString());
+              if (response.statusCode == 201) {
+                int roomId = json.decode(response.body)["id"];
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            RoomDetails(roomId, nameController.text)));
+              } else {
+                Navigator.of(context).pop();
+              }
+            },
+            child: Text(
+              'SAVE',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.playfairDisplay(color: Colors.black),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<http.Response> saveNewRoom(String roomName) {
+    var url = Uri.http(dotenv.env["SERVER"]!, 'room/add');
+    return http.post(url,
+        headers: {
+          'clientId': dotenv.env["CLIENT"]!,
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: roomName);
   }
 }
