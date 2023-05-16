@@ -104,7 +104,7 @@ public class CheckPlantConditionSchedule {
                                 .message(
                                         temperatureCheck > 0 ?
                                                 "It's too hot for " + userPlant.getNickname() + "!"
-                                                : "It's too cold enough for " + userPlant.getNickname() + "!").build()
+                                                : "It's too cold for " + userPlant.getNickname() + "!").build()
                 );
 
             int humidityCheck = Utils.checkWithinTargetValue(condition.getHumidity(), species.getPerfectHumidity(), AppConfig.HUMIDITY_SLACK);
