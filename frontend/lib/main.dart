@@ -11,25 +11,35 @@ void main() {
   runApp(const MyApp());
 }
 
+Future<void> setup() async {
+  await dotenv.load(fileName: ".env");
+
+  // if in debug mode, insert test data
+  if (kDebugMode) {
+    insertTestData();
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    () async {
-      await dotenv.load(fileName: ".env");
-
-      if (kDebugMode) {
-        insertTestData();
-      }
-    }();
-
-    // If in debug mode then insert test data
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.green),
-      home: const RootPage(),
+      home: FutureBuilder(
+          future: setup(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return RootPage();
+            }
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }),
     );
   }
 }
@@ -55,7 +65,7 @@ class _RootPageState extends State<RootPage> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0.0,
-          toolbarHeight: 150,
+          toolbarHeight: 100,
           title: Image.asset(
             'images/logo.png',
             fit: BoxFit.contain,
