@@ -189,6 +189,7 @@ class _RoomPageState extends State<RoomPage> {
               debugPrint(response.statusCode.toString());
               if (response.statusCode == 201) {
                 int roomId = json.decode(response.body)["id"];
+                Navigator.of(context).pop();
                 Navigator.push(
                     context,
                     MaterialPageRoute(
