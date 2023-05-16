@@ -1,7 +1,7 @@
 package com.plantstein.server.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,13 +21,12 @@ public class PlantTimeSeries {
     private Long id;
 
     @ManyToOne
-    @NotEmpty
+    @NotNull
     private Plant plant;
 
-    @NotEmpty
+    @NotNull
     private Timestamp timestamp;
 
-    @NotEmpty
     @Enumerated(EnumType.STRING)
     private Moisture moisture;
 }

@@ -2,12 +2,11 @@ package com.plantstein.server.rest;
 
 import com.plantstein.server.dto.NewPlantDTO;
 import com.plantstein.server.dto.PlantConditionDTO;
+import com.plantstein.server.dto.RoomConditionDTO;
 import com.plantstein.server.exception.NotFoundException;
-import com.plantstein.server.model.Plant;
-import com.plantstein.server.model.PlantTimeSeries;
-import com.plantstein.server.model.Room;
-import com.plantstein.server.model.Species;
+import com.plantstein.server.model.*;
 import com.plantstein.server.repository.PlantRepository;
+import com.plantstein.server.repository.PlantTimeSeriesRepository;
 import com.plantstein.server.repository.RoomRepository;
 import com.plantstein.server.repository.SpeciesRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,6 +33,8 @@ public class PlantRestController {
     private final PlantRepository plantRepository;
     private final SpeciesRepository speciesRepository;
     private final RoomRepository roomRepository;
+    private final PlantTimeSeriesRepository plantTimeSeriesRepository;
+    private final RoomRestController roomRestController;
 
     @Operation(summary = "Get all plants of user")
     @ApiResponse(responseCode = "200", description = "List of plants")
@@ -119,7 +120,28 @@ public class PlantRestController {
     @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
     @GetMapping("/condition/{id}")
     public PlantConditionDTO getCondition(@PathVariable Long id) {
-        throw new NotYetImplementedException();
+        Plant plant = plantRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Plant " + id + " does not exist"));
+        RoomConditionDTO condition = roomRestController.getCondition(plant.getRoom().getId());
+
+        List<PlantTimeSeries> plantRTSEntries = plantTimeSeriesRepository.findFirst3ByPlantIdOrderByTimestampDesc(id);
+        Moisture averageMoisture = Moisture.getAverageMoisture(
+                plantRTSEntries.stream()
+                        .map(PlantTimeSeries::getMoisture)
+                        .toList()
+        );
+
+        return PlantConditionDTO.builder()
+                .plantId(id)
+                .plantNickname(plant.getNickname())
+                .temperature(condition.getTemperature())
+                .perfectTemperature(plant.getSpecies().getPerfectTemperature())
+                .humidity(condition.getHumidity())
+                .perfectHumidity(plant.getSpecies().getPerfectHumidity())
+                .brightness(condition.getBrightness())
+                .perfectBrightness(plant.getSpecies().getPerfectLight())
+                .moisture(averageMoisture)
+                .build();
     }
 
     @Operation(summary = "Get condition over time")
@@ -130,5 +152,6 @@ public class PlantRestController {
     public List<PlantTimeSeries> getConditionOverTime(@PathVariable Long id, @Positive Integer days) {
         throw new NotYetImplementedException();
     }
+
 
 }
