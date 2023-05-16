@@ -55,7 +55,7 @@ class _RootPageState extends State<RootPage> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0.0,
-          toolbarHeight: 150,
+          toolbarHeight: 100,
           title: Image.asset(
             'images/logo.png',
             fit: BoxFit.contain,
