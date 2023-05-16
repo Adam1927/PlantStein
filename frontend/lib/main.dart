@@ -64,6 +64,7 @@ class _RootPageState extends State<RootPage> {
           centerTitle: true,
           backgroundColor: const Color(0xFFEBEDEB),
         ),
+        // body: const PotDetails(1)
         body: screens[currentPage],
         backgroundColor: const Color(0xFFEBEDEB),
         bottomNavigationBar: BottomNavigationBar(

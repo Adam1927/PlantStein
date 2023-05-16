@@ -81,7 +81,8 @@ class _RoomDetailsState extends State<RoomDetails> {
     return IconButton(
       onPressed: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => PotDetails(potId)));
+                MaterialPageRoute(builder: (context) => PotDetails(potId)))
+            .then((value) => loadPots(widget.roomId));
       },
       icon: Image.asset(
         'images/pot.png',

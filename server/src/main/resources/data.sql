@@ -2,7 +2,7 @@
 insert into Species (name, perfect_temperature, perfect_light, perfect_humidity, homeland, botanical_name, bloom_time, max_height)
  values ('Moth Orchid', 24, 12000, 60, 'Asia, Australia', 'Phalaenopsis spp', 'Varies', 91.4);
 insert into Species (name, perfect_temperature, perfect_light, perfect_humidity, homeland, botanical_name, bloom_time, max_height)
- values ('Cast Iron Plant', 18, 10000, 60, 'Asia', 'Aspidistra elatior', 'Spring, Summer', 60.9);
+ values ('Cast Iron', 18, 10000, 60, 'Asia', 'Aspidistra elatior', 'Spring, Summer', 60.9);
 insert into Species (name, perfect_temperature, perfect_light, perfect_humidity, homeland, botanical_name, bloom_time, max_height)
  values ('Devil Ivy', 22, 15000, 65, 'South Pacific', 'Epipremnum aureum', 'Does not bloom', 243.8);
 insert into Species (name, perfect_temperature, perfect_light, perfect_humidity, homeland, botanical_name, bloom_time, max_height)
@@ -10,9 +10,9 @@ insert into Species (name, perfect_temperature, perfect_light, perfect_humidity,
 insert into Species (name, perfect_temperature, perfect_light, perfect_humidity, homeland, botanical_name, bloom_time, max_height)
  values ('Peace Lily', 21, 15000, 65, 'Central and South America', 'Spathiphyllum wallisi Regel', 'Spring, Fall', 182.8);
 insert into Species (name, perfect_temperature, perfect_light, perfect_humidity, homeland, botanical_name, bloom_time, max_height)
- values ('Chinese Money Plant', 24, 15000, 65, 'China', 'Pilea peperomioides', 'Spring', 30.5);
+ values ('Money Plant', 24, 15000, 65, 'China', 'Pilea peperomioides', 'Spring', 30.5);
 insert into Species (name, perfect_temperature, perfect_light, perfect_humidity, homeland, botanical_name, bloom_time, max_height)
- values ('Chinese Evergreen', 22, 11000, 65, 'Asia', 'Aglaonema commutatum', 'Spring, Summer', 91.4);
+ values ('Evergreen', 22, 11000, 65, 'Asia', 'Aglaonema commutatum', 'Spring, Summer', 91.4);
 insert into Species (name, perfect_temperature, perfect_light, perfect_humidity, homeland, botanical_name, bloom_time, max_height)
  values ('Bromeliad', 24, 16000, 45, 'America', 'Bromeliaceae genera', 'Varies', 91.4);
 insert into Species (name, perfect_temperature, perfect_light, perfect_humidity, homeland, botanical_name, bloom_time, max_height)
