@@ -1,14 +1,25 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:onboarding/onboarding.dart';
 import 'package:plant_stein/plant_catalogue.dart';
 import 'package:plant_stein/pot_details_page.dart';
 import 'package:plant_stein/settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'insert_test_data.dart';
+import 'onboarding.dart';
 import 'room_page.dart';
 
-void main() {
-  runApp(const MyApp());
+int? initScreen;
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  initScreen = await prefs.getInt("initScreen");
+  await prefs.setInt("initScreen", 1);
+  print('initScreen ${initScreen}');
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -29,7 +40,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.green),
-      home: const RootPage(),
+      initialRoute: initScreen == 0 || initScreen == null ? "first" : "/",
+      routes: {
+        '/': (context) => RootPage(
+            ),
+        "first": (context) => OnboardingPage(),
+      },
     );
   }
 }
@@ -45,9 +61,9 @@ class _RootPageState extends State<RootPage> {
   int currentPage = 1;
 
   final screens = [
-    Settings(),
-    RoomPage(),
-    PlantCatalogue(),
+    const Settings(),
+    const RoomPage(),
+    const PlantCatalogue(),
   ];
 
   @override
@@ -64,7 +80,8 @@ class _RootPageState extends State<RootPage> {
           centerTitle: true,
           backgroundColor: const Color(0xFFEBEDEB),
         ),
-        body: screens[currentPage],
+        body: 
+        screens[currentPage],
         backgroundColor: const Color(0xFFEBEDEB),
         bottomNavigationBar: BottomNavigationBar(
           // currentIndex: currentPage,
