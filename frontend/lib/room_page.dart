@@ -61,7 +61,9 @@ class _RoomPageState extends State<RoomPage> {
               onSelected: (EditOptions item) {
                 if (item == EditOptions.editRoomName) {
                   openEditRoomName(context, roomId);
-                } else if (item == EditOptions.deleteRoom) {}
+                } else if (item == EditOptions.deleteRoom) {
+                  openDeleteRoom(context, roomId, roomName);
+                }
               },
               itemBuilder: (BuildContext context) =>
                   <PopupMenuEntry<EditOptions>>[
@@ -278,6 +280,63 @@ class _RoomPageState extends State<RoomPage> {
   Future<http.Response> editRoomName(int roomId, String newName) {
     var url = Uri.http(dotenv.env["SERVER"]!, 'room/rename/$roomId/$newName');
     return http.put(
+      url,
+      headers: {
+        'clientId': dotenv.env["CLIENT"]!,
+        "Accept": "application/json",
+        "content-type": "application/json"
+      },
+    );
+  }
+
+  Future openDeleteRoom(
+      BuildContext context, int roomId, String roomName) async {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0XFF5F725F),
+        title: Text(
+          'Are you sure you want to delete $roomName?',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.playfairDisplay(color: Colors.white, fontSize: 30),
+        ),
+        actions: [
+          TextButton(
+            style: const ButtonStyle(
+                backgroundColor:
+                    MaterialStatePropertyAll<Color>(Color(0xFFA85032))),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              'NO',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.playfairDisplay(color: Colors.white),
+            ),
+          ),
+          TextButton(
+            style: const ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll<Color>(Colors.white)),
+            onPressed: () async {
+              http.Response response = await deleteRoom(roomId);
+              loadRooms(); // load rooms again
+              debugPrint(response.statusCode.toString());
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              'YES',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.playfairDisplay(color: Colors.black),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<http.Response> deleteRoom(int roomId) {
+    var url = Uri.http(dotenv.env["SERVER"]!, 'room/delete/$roomId');
+    return http.delete(
       url,
       headers: {
         'clientId': dotenv.env["CLIENT"]!,
