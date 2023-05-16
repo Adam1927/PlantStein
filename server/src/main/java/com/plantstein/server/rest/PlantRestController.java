@@ -61,6 +61,8 @@ public class PlantRestController {
     @Operation(summary = "Add plant")
     @ApiResponse(responseCode = "201", description = "Added plant")
     @ApiResponse(responseCode = "400", description = "Invalid plant data", content = @Content)
+    @ApiResponse(responseCode = "404", description = "Room does not exist", content = @Content)
+    @ApiResponse(responseCode = "404", description = "Species does not exist", content = @Content)
     @PostMapping("/add")
     public ResponseEntity<Plant> addPlant(@RequestBody NewPlantDTO plantDTO) {
         Room room = roomRepository.findById(plantDTO.getRoomId())
