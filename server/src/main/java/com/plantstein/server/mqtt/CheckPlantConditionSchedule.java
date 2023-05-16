@@ -107,7 +107,7 @@ public class CheckPlantConditionSchedule {
                                                 : "It's too cold enough for " + userPlant.getNickname() + "!").build()
                 );
 
-            int humidityCheck = Utils.checkWithinTargetValue(condition.getBrightness(), species.getPerfectLight(), AppConfig.HUMIDITY_SLACK);
+            int humidityCheck = Utils.checkWithinTargetValue(condition.getHumidity(), species.getPerfectHumidity(), AppConfig.HUMIDITY_SLACK);
             if (humidityCheck != 0)
                 response.add(
                         CheckPlantConditionsDTO.builder()
