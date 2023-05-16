@@ -31,6 +31,8 @@ void insertTestData() async {
     await _insertRoom(room);
   }
 
+  await _insertPlant("Microcontroller Plant", species[0], 1);
+
   for (String room in rooms) {
     for (int i = 0; i < random.nextInt(10) + 3; i++) {
       await _insertPlant(plantNames.randomItem(), species.randomItem(),

@@ -10,10 +10,14 @@
 #include <PubSubClient.h>
 #include "DHT.h"
 #include <string.h>
+#include <ArduinoJson.h>
+
 
 #define DHTTYPE DHT11
 #define DHTPIN D3
 DHT dht(DHTPIN, DHTTYPE); 
+
+#define PLANT_ID 1
 
 
 const char* ssid = SSID; // WiFi Name
@@ -25,22 +29,22 @@ WiFiClient wioClient;
 PubSubClient client(wioClient);
 long lastMsg = 0;
 char moistureMsg[50];
-char lightMsg[50];
+char brightnessMsg[50];
 char humidityMsg[50];
 char tempMsg[50];
 char moisturePublish[50];
-char lightPublish[50];
+char brightnessPublish[50];
 char humidityPublish[50];
 char tempPublish[50];
 
 
 int moisturePin = A0;
-int lightPin = A1;
+int brightnessPin = A1;
 int ledPin = D1;
 int speakerPin = D2;
 int humidityTempPin = D3;
 int moistureValue = 0;
-int lightValue = 0;
+int brightnessValue = 0;
 int ledValue = 0;
 int speakerValue = 0;
 float humidityValue = 0;
@@ -161,35 +165,46 @@ void loop() {
     lastMsg = now;
 
     moistureValue = analogRead(moisturePin);
-    lightValue = analogRead(lightPin);
+    brightnessValue = analogRead(brightnessPin);
     humidityValue = dht.readHumidity();
     tempValue = dht.readTemperature();
     
     snprintf (moistureMsg, 50, "Moisture: %ld", moistureValue);
-    snprintf (lightMsg, 50, "Light: %ld", lightValue);
+    snprintf (brightnessMsg, 50, "brightness: %ld", brightnessValue);
     snprintf (humidityMsg, 50, "Humidity: %.2f %%", humidityValue);
     snprintf (tempMsg, 50, "Temperature: %.2f \*C", tempValue);
 
     snprintf (moisturePublish, 50, "%ld", moistureValue);
-    snprintf (lightPublish, 50, "%ld", lightValue);
+    snprintf (brightnessPublish, 50, "%ld", brightnessValue);
     snprintf (humidityPublish, 50, "%f", humidityValue);
     snprintf (tempPublish, 50, "%f", tempValue);
 
     Serial.println(moistureMsg);
-    Serial.println(lightMsg);
+    Serial.println(brightnessMsg);
     Serial.println(humidityMsg);
     Serial.println(tempMsg);
 
-    client.publish("moisture", moisturePublish);
-    client.publish("light", lightPublish);
-    client.publish("humidity", humidityPublish);
-    client.publish("temperature", tempPublish);
+    DynamicJsonDocument doc(1024);
+
+    doc["moisture"] = moisturePublish;
+    doc["brightness"]   = brightnessPublish;
+    doc["humidity"] = humidityPublish;
+    doc["temperature"] = tempPublish;
+
+    char jsonString[1024];  // Define a char array to hold the serialized JSON
+
+    size_t jsonSize = serializeJson(doc, jsonString, sizeof(jsonString));
+
+    char topic[20]; 
+
+    snprintf(topic, sizeof(topic), "timeseries/%d", PLANT_ID);
+    client.publish(topic, jsonString);
 
     tft.fillScreen(TFT_BLACK);
     tft.setCursor(0, 48);
     tft.print(moistureMsg);
     tft.setCursor(0, 96);
-    tft.print(lightMsg);
+    tft.print(brightnessMsg);
     tft.setCursor(0, 144);
     tft.print(humidityMsg);
     tft.setCursor(0, 192);

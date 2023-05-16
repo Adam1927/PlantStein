@@ -12,6 +12,8 @@ import java.util.List;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
+    @Query("select distinct r.clientId from Room r")
+    List<String> getAllClientIds();
 
     @Query("select r from Room r where r.clientId = ?1 order by r.id asc")
     List<Room> findByClientId(String clientId);
