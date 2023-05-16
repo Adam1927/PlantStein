@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:plant_stein/room_details.dart';
@@ -61,6 +60,7 @@ class _RoomPageState extends State<RoomPage> {
             PopupMenuButton(
               onSelected: (EditOptions item) {
                 if (item == EditOptions.editRoomName) {
+                  openEditRoomName(context, roomId);
                 } else if (item == EditOptions.deleteRoom) {}
               },
               itemBuilder: (BuildContext context) =>
@@ -216,5 +216,74 @@ class _RoomPageState extends State<RoomPage> {
           "content-type": "application/json"
         },
         body: roomName);
+  }
+
+  Future openEditRoomName(BuildContext context, int roomId) async {
+    final TextEditingController newNameController = TextEditingController();
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0XFF5F725F),
+        title: Text(
+          'Rename room',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.playfairDisplay(color: Colors.white),
+        ),
+        content: TextField(
+          controller: newNameController,
+          autofocus: true,
+          decoration: const InputDecoration(
+              hintText: 'Enter new room name',
+              fillColor: Colors.white,
+              filled: true,
+              border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white))),
+        ),
+        actions: [
+          TextButton(
+            style: const ButtonStyle(
+                backgroundColor:
+                    MaterialStatePropertyAll<Color>(Color(0xFFA85032))),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              'CANCEL',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.playfairDisplay(color: Colors.white),
+            ),
+          ),
+          TextButton(
+            style: const ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll<Color>(Colors.white)),
+            onPressed: () async {
+              http.Response response = await editRoomName(
+                  roomId, newNameController.text); // load rooms again
+              loadRooms();
+              debugPrint(response.statusCode.toString());
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              'SAVE',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.playfairDisplay(color: Colors.black),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<http.Response> editRoomName(int roomId, String newName) {
+    var url = Uri.http(dotenv.env["SERVER"]!, 'room/rename/$roomId/$newName');
+    return http.put(
+      url,
+      headers: {
+        'clientId': dotenv.env["CLIENT"]!,
+        "Accept": "application/json",
+        "content-type": "application/json"
+      },
+    );
   }
 }
