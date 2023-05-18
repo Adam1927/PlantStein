@@ -70,6 +70,7 @@ class _PotDetailsState extends State<PotDetails> {
                 child: Column(
                   children: [
                     AppBar(
+                      toolbarHeight: 100,
                       title: Text(
                         plantDetails.plantNickname,
                         textAlign: TextAlign.center,
@@ -78,9 +79,22 @@ class _PotDetailsState extends State<PotDetails> {
                             fontSize: 30,
                             fontWeight: FontWeight.bold),
                       ),
+                      iconTheme: const IconThemeData(color: Color(0xFF5F725F)),
                       centerTitle: true,
                       elevation: 0.0,
                       backgroundColor: const Color(0xFFEBEDEB),
+                      actions: [
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          color: const Color.fromARGB(255, 208, 48, 48),
+                          tooltip: "Delete pot",
+                          onPressed: () async {
+                            final result = await showDeleteConfirmationDialog(
+                                context, widget.potId);
+                            if (result == true) Navigator.pop(context);
+                          },
+                        )
+                      ],
                     ),
                     Column(
                       children: [
@@ -311,17 +325,7 @@ class _PotDetailsState extends State<PotDetails> {
             ),
             const SizedBox(
               height: 10,
-            ),
-            FloatingActionButton.extended(
-              onPressed: () async {
-                final result =
-                    await showDeleteConfirmationDialog(context, widget.potId);
-                if (result == true) Navigator.pop(context);
-              },
-              backgroundColor: Color.fromARGB(255, 224, 181, 167),
-              label: const Text("Delete Plant"),
-              icon: const Icon(Icons.delete),
-            ),
+            )
           ],
         ));
   }
