@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:plant_stein/plant_catalogue.dart';
 import 'package:plant_stein/pot_details_page.dart';
-import 'package:plant_stein/settings.dart';
 import 'insert_test_data.dart';
 import 'room_page.dart';
 
@@ -55,7 +54,6 @@ class _RootPageState extends State<RootPage> {
   int currentPage = 1;
 
   final screens = [
-    Settings(),
     RoomPage(),
     PlantCatalogue(),
   ];
@@ -85,11 +83,6 @@ class _RootPageState extends State<RootPage> {
             })
           },
           items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('images/settings.png'),
-                  color: Color(0xFF5F725F)),
-              label: '',
-            ),
             BottomNavigationBarItem(
               icon: ImageIcon(AssetImage('images/home.png'),
                   color: Color(0xFF5F725F)),
