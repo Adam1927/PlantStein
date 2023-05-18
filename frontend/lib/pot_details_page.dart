@@ -308,7 +308,20 @@ class _PotDetailsState extends State<PotDetails> {
               backgroundColor: const Color(0xFFA0AFA1),
               label: const Text("Change Room"),
               icon: const Icon(Icons.meeting_room),
-            )
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            FloatingActionButton.extended(
+              onPressed: () async {
+                final result =
+                    await showDeleteConfirmationDialog(context, widget.potId);
+                if (result == true) Navigator.pop(context);
+              },
+              backgroundColor: Color.fromARGB(255, 224, 181, 167),
+              label: const Text("Delete Plant"),
+              icon: const Icon(Icons.delete),
+            ),
           ],
         ));
   }
@@ -486,4 +499,46 @@ class Room {
   int id;
   String name;
   Room(this.id, this.name);
+}
+
+Future showDeleteConfirmationDialog(BuildContext context, int plantId) async {
+  return showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Are you sure you want to delete this pot?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(
+            context,
+          ),
+          child: const Text(
+            'No',
+            selectionColor: Color(0xFF5F725F),
+          ),
+        ),
+        TextButton(
+          onPressed: () async {
+            await deletePlant(plantId);
+            Navigator.pop(context, true);
+          },
+          child: const Text(
+            'Yes',
+            selectionColor: Color(0xFF5F725F),
+          ),
+        )
+      ],
+    ),
+  );
+}
+
+Future<http.Response> deletePlant(int plantId) {
+  var url = Uri.http(dotenv.env["SERVER"]!, 'plant/delete/$plantId');
+  return http.delete(
+    url,
+    headers: {
+      'clientId': dotenv.env["CLIENT"]!,
+      "Accept": "application/json",
+      "content-type": "application/json"
+    },
+  );
 }
