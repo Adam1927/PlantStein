@@ -186,8 +186,11 @@ class _RoomDetailsState extends State<RoomDetails> {
               if (response.statusCode == 201) {
                 int potId = json.decode(response.body)["id"];
                 Navigator.of(context).pop();
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PotDetails(potId)));
+                Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PotDetails(potId)))
+                    .then((_) => loadPots(widget.roomId));
               } else {
                 Navigator.of(context).pop();
               }

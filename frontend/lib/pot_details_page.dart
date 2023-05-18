@@ -517,8 +517,8 @@ Future showDeleteConfirmationDialog(BuildContext context, int plantId) async {
           ),
         ),
         TextButton(
-          onPressed: () {
-            deletePlant(plantId);
+          onPressed: () async {
+            await deletePlant(plantId);
             Navigator.pop(context, true);
           },
           child: const Text(
