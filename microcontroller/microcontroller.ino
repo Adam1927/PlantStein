@@ -32,10 +32,6 @@ char moistureMsg[50];
 char brightnessMsg[50];
 char humidityMsg[50];
 char tempMsg[50];
-char moisturePublish[50];
-char brightnessPublish[50];
-char humidityPublish[50];
-char tempPublish[50];
 
 
 int moisturePin = A0;
@@ -169,15 +165,10 @@ void loop() {
     humidityValue = dht.readHumidity();
     tempValue = dht.readTemperature();
     
-    snprintf (moistureMsg, 50, "Moisture: %ld", moistureValue);
-    snprintf (brightnessMsg, 50, "brightness: %ld", brightnessValue);
-    snprintf (humidityMsg, 50, "Humidity: %.2f %%", humidityValue);
-    snprintf (tempMsg, 50, "Temperature: %.2f \*C", tempValue);
-
-    snprintf (moisturePublish, 50, "%ld", moistureValue);
-    snprintf (brightnessPublish, 50, "%ld", brightnessValue);
-    snprintf (humidityPublish, 50, "%f", humidityValue);
-    snprintf (tempPublish, 50, "%f", tempValue);
+    snprintf (moistureMsg, 50, "%ld", moistureValue);
+    snprintf (brightnessMsg, 50, "%ld", brightnessValue);
+    snprintf (humidityMsg, 50, "%.2f", humidityValue);
+    snprintf (tempMsg, 50, "%.2f", tempValue);
 
     Serial.println(moistureMsg);
     Serial.println(brightnessMsg);
@@ -186,10 +177,10 @@ void loop() {
 
     DynamicJsonDocument doc(1024);
 
-    doc["moisture"] = moisturePublish;
-    doc["brightness"]   = brightnessPublish;
-    doc["humidity"] = humidityPublish;
-    doc["temperature"] = tempPublish;
+    doc["moisture"] = moistureMsg;
+    doc["brightness"]   = brightnessMsg;
+    doc["humidity"] = humidityMsg;
+    doc["temperature"] = tempMsg;
 
     char jsonString[1024];  // Define a char array to hold the serialized JSON
 
@@ -200,14 +191,41 @@ void loop() {
     snprintf(topic, sizeof(topic), "timeseries/%d", PLANT_ID);
     client.publish(topic, jsonString);
 
-    tft.fillScreen(TFT_BLACK);
-    tft.setCursor(0, 48);
+    tft.setTextColor(TFT_BLACK);
+    // if conditions are right
+    tft.fillScreen(TFT_GREENYELLOW);
+    tft.setCursor(10, 30);
+    tft.print("EVERYTHING IS ALRIGHT! :)");
+    // if conditions are wrong
+    /*
+    tft.fillScreen(TFT_RED);
+    tft.setCursor(10, 30);
+    tft.print("NOTIFS TO BE PRINTED HERE");
+    */
+
+
+    tft.fillRoundRect(5, 70, 150, 60, 10, TFT_BLACK);
+    tft.fillRoundRect(5, 156, 150, 60, 10, TFT_BLACK);
+    tft.fillRoundRect(165, 70, 150, 60, 10, TFT_BLACK);
+    tft.fillRoundRect(165, 156, 150, 60, 10, TFT_BLACK);
+
+    tft.setTextColor(TFT_WHITE);
+
+    tft.setCursor(15, 78);
+    tft.print("Moisture");
+    tft.setCursor(175, 78);
+    tft.print("Temperature");
+    tft.setCursor(15, 106);
     tft.print(moistureMsg);
-    tft.setCursor(0, 96);
-    tft.print(brightnessMsg);
-    tft.setCursor(0, 144);
-    tft.print(humidityMsg);
-    tft.setCursor(0, 192);
+    tft.setCursor(175, 106);
     tft.print(tempMsg);
+    tft.setCursor(15, 164);
+    tft.print("Brightness");
+    tft.setCursor(175, 164);
+    tft.print("Humidity");
+    tft.setCursor(15, 192);
+    tft.print(brightnessMsg);
+    tft.setCursor(175, 192);
+    tft.print(humidityMsg);
   }
 }
