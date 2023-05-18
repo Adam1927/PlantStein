@@ -51,7 +51,7 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
-  int currentPage = 1;
+  int currentPage = 0;
 
   final screens = [
     RoomPage(),
