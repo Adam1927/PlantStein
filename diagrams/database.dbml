@@ -3,53 +3,53 @@
 // All temperature values in celsius
 Table species {
   name varchar [pk]
-  perfect_temperature integer
-  perfect_light_per_day decimal
-  perfect_humidity decimal
-  perfect_moisture decimal
+  perfect_temperature double
+  perfect_light_per_day double
+  perfect_humidity double
+  perfect_moisture double
+  botanical_name varchar
+  bloom_time varchar
+  homeland varchar
+  max_height double
 }
 
 Table room {
-  name varchar [pk]
-  clientId varchar [pk]
+  id long [pk]
+  name varchar 
+  client_id varchar 
   
 }
 
 Table room_timeseries_data {
-  room long [pk]
-  clientId varchar [pk]
-  timestamp timestamp [pk]
-  temperature integer
-  brightness decimal
-  humidity decimal
+  id long [pk]
+  room Room 
+  timestamp timestamp 
+  temperature double
+  brightness double
+  humidity double
 }
 
-Ref: room_timeseries_data.room > room.name
+Ref: room_timeseries_data.room > room.id
 
 // One plant of the user
 Table plant {
   id long [pk]
-  clientId varchar [pk]
   nickname varchar
-  room integer
-  species varchar
+  room Room
+  species Species
 }
 
-Ref: plant.room > room.name
-Ref: plant.clientId > room.clientId
+Ref: plant.room > room.id
 Ref: plant.species > species.name
 
 Table plant_timeseries_data {
-  plant long [pk]
-  clientId varchar [pk]
+  id long [pk]
+  plant Plant 
   timestamp timestamp
-  moisture decimal
-
-
+  moisture Moisture
 }
 
 Ref: plant_timeseries_data.plant > plant.id
-Ref: plant_timeseries_data.clientId > plant.clientId
 
 
 
