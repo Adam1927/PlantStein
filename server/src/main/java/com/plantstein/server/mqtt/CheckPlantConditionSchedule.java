@@ -90,8 +90,8 @@ public class CheckPlantConditionSchedule {
                                 .plantName(userPlant.getNickname())
                                 .message(
                                         brightnessCheck > 0 ?
-                                                "It's too bright for " + userPlant.getNickname() + "!"
-                                                : "It's not bright enough for " + userPlant.getNickname() + "!"
+                                                "It's too bright!"
+                                                : "It's not bright enough!"
                                 ).build()
                 );
 
@@ -103,8 +103,8 @@ public class CheckPlantConditionSchedule {
                                 .plantName(userPlant.getNickname())
                                 .message(
                                         temperatureCheck > 0 ?
-                                                "It's too hot for " + userPlant.getNickname() + "!"
-                                                : "It's too cold for " + userPlant.getNickname() + "!").build()
+                                                "It's too hot!"
+                                                : "It's too cold!").build()
                 );
 
             int humidityCheck = Utils.checkWithinTargetValue(condition.getHumidity(), species.getPerfectHumidity(), AppConfig.HUMIDITY_SLACK);
@@ -115,8 +115,8 @@ public class CheckPlantConditionSchedule {
                                 .plantName(userPlant.getNickname())
                                 .message(
                                         humidityCheck > 0 ?
-                                                "The humidity is too high for " + userPlant.getNickname() + "!"
-                                                : "The humidity isn't high enough for " + userPlant.getNickname() + "!"
+                                                "It's too humid!"
+                                                : "It's not humid enough!"
                                 ).build()
                 );
 
@@ -127,8 +127,8 @@ public class CheckPlantConditionSchedule {
                                 .plantName(userPlant.getNickname())
                                 .message(
                                         Moisture.TOO_DRY.equals(averageMoisture) ?
-                                                userPlant.getNickname() + "'s soil is too dry!"
-                                                : userPlant.getNickname() + "'s soil is too wet!"
+                                                "Soil is too dry!"
+                                                : "Soil is too wet!"
                                 ).build()
                 );
         }

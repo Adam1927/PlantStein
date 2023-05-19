@@ -18,6 +18,7 @@
 DHT dht(DHTPIN, DHTTYPE); 
 
 #define PLANT_ID 1
+#define CLIENT_ID "TEST_DEVICE"
 
 
 const char* ssid = SSID; // WiFi Name
@@ -28,10 +29,14 @@ TFT_eSPI tft;
 WiFiClient wioClient;
 PubSubClient client(wioClient);
 long lastMsg = 0;
+long lastNotif = 0;
 char moistureMsg[50];
 char brightnessMsg[50];
 char humidityMsg[50];
 char tempMsg[50];
+
+JsonArray notifMsg;
+bool goodCondition = true;
 
 
 int moisturePin = A0;
@@ -45,6 +50,8 @@ int ledValue = 0;
 int speakerValue = 0;
 float humidityValue = 0;
 float tempValue = 0;
+
+StaticJsonDocument<1024> messages;
 
 #if defined(ARDUINO_ARCH_AVR)
     #define debug  Serial
@@ -87,24 +94,9 @@ void setup_wifi() {
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  //tft.fillScreen(TFT_BLACK);
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("] ");
-  char buff_p[length];
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
-    buff_p[i] = (char)payload[i];
-  }
-  Serial.println();
-  buff_p[length] = '\0';
-  String msg_p = String(buff_p);
-  tft.fillScreen(TFT_BLACK);
-  tft.setCursor((320 - tft.textWidth("MQTT Message")) / 2, 90);
-  tft.print("MQTT Message: " );
-  tft.setCursor((320 - tft.textWidth(msg_p)) / 2, 120);
-  tft.print(msg_p); // Print recieved payload
-
+  deserializeJson(messages, (const byte*) payload, length);
+  goodCondition = false;
+  lastNotif = millis();
 }
 
 void reconnect() {
@@ -147,6 +139,7 @@ void setup() {
   setup_wifi();
   client.setServer(mqtt_server, 1883); // Connect the MQTT Server
   client.setCallback(callback);
+  client.setBufferSize(1024);
 }
 
 void loop() {
@@ -155,6 +148,10 @@ void loop() {
     reconnect();
   }
   client.loop();
+
+  char subTopic[50];
+  snprintf(subTopic, sizeof(subTopic), "plant-conditions/%s", CLIENT_ID);
+  client.subscribe(subTopic);
 
   long now = millis();
   if (now - lastMsg > 2000) {
@@ -178,7 +175,7 @@ void loop() {
     DynamicJsonDocument doc(1024);
 
     doc["moisture"] = moistureMsg;
-    doc["brightness"]   = brightnessMsg;
+    doc["brightness"] = brightnessMsg;
     doc["humidity"] = humidityMsg;
     doc["temperature"] = tempMsg;
 
@@ -186,46 +183,54 @@ void loop() {
 
     size_t jsonSize = serializeJson(doc, jsonString, sizeof(jsonString));
 
-    char topic[20]; 
+    char pubTopic[20]; 
 
-    snprintf(topic, sizeof(topic), "timeseries/%d", PLANT_ID);
-    client.publish(topic, jsonString);
+    snprintf(pubTopic, sizeof(pubTopic), "timeseries/%d", PLANT_ID);
+    client.publish(pubTopic, jsonString);
 
     tft.setTextColor(TFT_BLACK);
-    // if conditions are right
-    tft.fillScreen(TFT_GREENYELLOW);
-    tft.setCursor(10, 30);
-    tft.print("EVERYTHING IS ALRIGHT! :)");
-    // if conditions are wrong
-    /*
-    tft.fillScreen(TFT_RED);
-    tft.setCursor(10, 30);
-    tft.print("NOTIFS TO BE PRINTED HERE");
-    */
 
+    if (goodCondition) {
+      tft.fillScreen(TFT_GREENYELLOW);
+      tft.setCursor(10, 30);
+      tft.print("Everything's alright! :)");
+    } else {
+      tft.fillScreen(TFT_RED);
+      tft.setCursor(10, 10);
+      notifMsg = messages.as<JsonArray>();
+      for (JsonObject repo : notifMsg) {
+        const char* message = repo["message"];
+        tft.print(message);
+        tft.setCursor(10, tft.getCursorY() + 20);
+      }
+    }
 
-    tft.fillRoundRect(5, 70, 150, 60, 10, TFT_BLACK);
-    tft.fillRoundRect(5, 156, 150, 60, 10, TFT_BLACK);
-    tft.fillRoundRect(165, 70, 150, 60, 10, TFT_BLACK);
-    tft.fillRoundRect(165, 156, 150, 60, 10, TFT_BLACK);
+    tft.fillRoundRect(5, 95, 150, 60, 10, TFT_BLACK);
+    tft.fillRoundRect(5, 171, 150, 60, 10, TFT_BLACK);
+    tft.fillRoundRect(165, 95, 150, 60, 10, TFT_BLACK);
+    tft.fillRoundRect(165, 171, 150, 60, 10, TFT_BLACK);
 
     tft.setTextColor(TFT_WHITE);
 
-    tft.setCursor(15, 78);
+    tft.setCursor(15, 103);
     tft.print("Moisture");
-    tft.setCursor(175, 78);
+    tft.setCursor(175, 103);
     tft.print("Temperature");
-    tft.setCursor(15, 106);
+    tft.setCursor(15, 131);
     tft.print(moistureMsg);
-    tft.setCursor(175, 106);
+    tft.setCursor(175, 131);
     tft.print(tempMsg);
-    tft.setCursor(15, 164);
+    tft.setCursor(15, 179);
     tft.print("Brightness");
-    tft.setCursor(175, 164);
+    tft.setCursor(175, 179);
     tft.print("Humidity");
-    tft.setCursor(15, 192);
+    tft.setCursor(15, 207);
     tft.print(brightnessMsg);
-    tft.setCursor(175, 192);
+    tft.setCursor(175, 207);
     tft.print(humidityMsg);
+
+    if (now - lastNotif > 5000) {
+      goodCondition = true;
+    }
   }
 }
