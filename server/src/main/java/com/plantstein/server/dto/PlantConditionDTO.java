@@ -1,16 +1,23 @@
 package com.plantstein.server.dto;
 
 import com.plantstein.server.model.Moisture;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PlantConditionDTO {
+    private Long plantId;
     private String plantNickname;
-    private double temperature;
-    private double brightness;
-    private double humidity;
     private Moisture moisture;
-
+    private Double brightness;
+    private Double perfectBrightness;
+    private Double temperature;
+    private Double perfectTemperature;
+    private Double humidity;
+    private Double perfectHumidity;
 }

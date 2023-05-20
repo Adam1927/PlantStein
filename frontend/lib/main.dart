@@ -2,8 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:plant_stein/plant_catalogue.dart';
-import 'package:plant_stein/settings.dart';
-import 'package:plant_stein/statistics.dart';
+import 'package:plant_stein/pot_details_page.dart';
 import 'insert_test_data.dart';
 import 'room_page.dart';
 
@@ -11,25 +10,35 @@ void main() {
   runApp(const MyApp());
 }
 
+Future<void> setup() async {
+  await dotenv.load(fileName: ".env");
+
+  // if in debug mode, insert test data
+  if (kDebugMode) {
+    insertTestData();
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    () async {
-      await dotenv.load(fileName: ".env");
-
-      if (kDebugMode) {
-        insertTestData();
-      }
-    }();
-
-    // If in debug mode then insert test data
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.green),
-      home: const RootPage(),
+      home: FutureBuilder(
+          future: setup(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return RootPage();
+            }
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }),
     );
   }
 }
@@ -42,10 +51,9 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
-  int currentPage = 1;
+  int currentPage = 0;
 
   final screens = [
-    Settings(),
     RoomPage(),
     PlantCatalogue(),
   ];
@@ -55,7 +63,7 @@ class _RootPageState extends State<RootPage> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0.0,
-          toolbarHeight: 150,
+          toolbarHeight: 100,
           title: Image.asset(
             'images/logo.png',
             fit: BoxFit.contain,
@@ -75,11 +83,6 @@ class _RootPageState extends State<RootPage> {
             })
           },
           items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('images/settings.png'),
-                  color: Color(0xFF5F725F)),
-              label: '',
-            ),
             BottomNavigationBarItem(
               icon: ImageIcon(AssetImage('images/home.png'),
                   color: Color(0xFF5F725F)),
