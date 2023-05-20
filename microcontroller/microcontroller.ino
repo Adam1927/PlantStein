@@ -30,6 +30,7 @@ WiFiClient wioClient;
 PubSubClient client(wioClient);
 long lastMsg = 0;
 long lastNotif = 0;
+long lastSpeaker = -86400001;
 char moistureMsg[50];
 char brightnessMsg[50];
 char humidityMsg[50];
@@ -123,6 +124,22 @@ void reconnect() {
   }
 }
 
+void playAlarm() {
+  for(int i=0;i<15;i++)
+  {
+    for(int i=0;i<100;i++)
+    {
+      digitalWrite(speakerPin,HIGH);
+      delayMicroseconds(1911);
+      digitalWrite(speakerPin,LOW);
+      delayMicroseconds(1911);
+    }
+    delay(500);
+  }
+  lastSpeaker = millis();
+}
+
+
 void setup() {
 
   tft.begin();
@@ -133,6 +150,9 @@ void setup() {
   pinMode(humidityTempPin, INPUT);
   digitalWrite(humidityTempPin, 1);
   dht.begin();
+
+  pinMode(speakerPin,OUTPUT);
+  digitalWrite(speakerPin,LOW);
 
   Serial.println();
   Serial.begin(115200);
@@ -203,6 +223,10 @@ void loop() {
         tft.print(message);
         tft.setCursor(10, tft.getCursorY() + 20);
       }
+    }
+
+    if (!goodCondition && now - lastSpeaker > 86400000) {
+      playAlarm();
     }
 
     tft.fillRoundRect(5, 95, 150, 60, 10, TFT_BLACK);
