@@ -1,5 +1,7 @@
-import 'dart:async';
+//Based on:
+//https://stackoverflow.com/questions/43879103/adding-a-splash-screen-to-flutter-apps
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:plant_stein/main.dart';
