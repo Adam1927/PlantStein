@@ -295,9 +295,12 @@ class _PotDetailsState extends State<PotDetails> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               FloatingActionButton.extended(
+                heroTag: "btn1",
                 onPressed: () async {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Statistics()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Statistics(widget.potId)));
                 },
                 backgroundColor: const Color(0xFFA0AFA1),
                 label: const Text(
@@ -309,6 +312,7 @@ class _PotDetailsState extends State<PotDetails> {
                 height: 10,
               ),
               FloatingActionButton.extended(
+                heroTag: "btn2",
                 onPressed: () async {
                   final result =
                       await showDeleteConfirmationDialog(context, widget.potId);
@@ -327,6 +331,7 @@ class _PotDetailsState extends State<PotDetails> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               FloatingActionButton.extended(
+                heroTag: "btn3",
                 onPressed: () async {
                   final result = await openEditPlantName(context, widget.potId);
                 },
@@ -338,6 +343,7 @@ class _PotDetailsState extends State<PotDetails> {
                 height: 10,
               ),
               FloatingActionButton.extended(
+                heroTag: "btn4",
                 onPressed: () async {
                   final result = await openEditPlantRoom(context, widget.potId);
                 },

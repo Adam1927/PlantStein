@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:plant_stein/charts/humidity_chart.dart';
 import 'package:plant_stein/charts/light_chart.dart';
-import 'package:plant_stein/charts/moisture_chart.dart';
 import 'package:plant_stein/charts/temperature_chart.dart';
 
 class Statistics extends StatefulWidget {
-  const Statistics({super.key});
+  final int potId;
+  const Statistics(this.potId, {super.key});
 
   @override
   State<Statistics> createState() => _StatisticsState();
@@ -38,32 +38,14 @@ class _StatisticsState extends State<Statistics> {
               const SizedBox(
                 height: 20.0,
               ),
-              Text('Last 7 days'.toUpperCase(),
+              Text("THIS WEEK'S STATISTICS",
                   style: GoogleFonts.playfairDisplay(
-                    color: const Color(0xFFCE9E8E),
-                    fontSize: 20,
+                    color: const Color(0xFF5F725F),
+                    fontSize: 26,
                   )),
               const SizedBox(
                 height: 20.0,
               ),
-              Text(
-                'Pot #',
-                style: GoogleFonts.playfairDisplay(
-                    color: const Color(0xFF474847),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Text(
-                'Soil Moisture',
-                style: GoogleFonts.playfairDisplay(
-                  color: const Color(0xFF474847),
-                  fontSize: 20,
-                ),
-              ),
-              const MoistureChart(),
               Text(
                 'Room Temperature',
                 style: GoogleFonts.playfairDisplay(
@@ -71,7 +53,7 @@ class _StatisticsState extends State<Statistics> {
                   fontSize: 20,
                 ),
               ),
-              const TemperatureChart(),
+              TemperatureChart(widget.potId),
               Text(
                 'Room Humidity',
                 style: GoogleFonts.playfairDisplay(
@@ -79,7 +61,7 @@ class _StatisticsState extends State<Statistics> {
                   fontSize: 20,
                 ),
               ),
-              const HumidityChart(),
+              HumidityChart(widget.potId),
               Text(
                 'Lighting',
                 style: GoogleFonts.playfairDisplay(
@@ -87,7 +69,7 @@ class _StatisticsState extends State<Statistics> {
                   fontSize: 20,
                 ),
               ),
-              const LightChart(),
+              LightChart(widget.potId),
             ],
           ),
         ),
