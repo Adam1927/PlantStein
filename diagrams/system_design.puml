@@ -3,45 +3,39 @@ left to right direction
 
 component "Microcontroller"
 note top of Microcontroller
-publish on /temperature
-publish on /humidity
-publish on /moisture
-publish on /brightness
+publish sensor data on /timeseries (JSON)
 end note
 
 note bottom of Microcontroller
-subscribe to /alert
+subscribe to /plant-conditions
 end note
 
-component "Temperature Sensor" as TemperatureSensor
+' component "Temperature Sensor" as TemperatureSensor
 component "Temperature & Humidity Sensor" as TemperatureHumiditySensor
 component "Moisture Sensor" as MoistureSensor
 component "Light Sensor" as LightSensor
 component "RGB LED" as RGBLED
-component "Speaker" as Speaker
+' component "Speaker" as Speaker
 
 component Server
 
 note top of Server
-publish on /alert
+publish on /plant-conditions (JSON)
 end note
 
 note bottom of Server
-subscribe to /temperature
-subscribe to /humidity
-subscribe to /moisture
-subscribe to /brightness
+subscribe to /timeseries
 end note
 
 component App
 database Database
 
-TemperatureSensor --> Microcontroller : Sensor data
+' TemperatureSensor --> Microcontroller : Sensor data
 TemperatureHumiditySensor --> Microcontroller : Sensor data
 MoistureSensor  --> Microcontroller : Sensor data
 LightSensor --> Microcontroller : Sensor data
 RGBLED <-- Microcontroller : Alert
-Speaker <-- Microcontroller : Alert
+' Speaker <-- Microcontroller : Alert
 
 Microcontroller --> Server : Transmit sensor data over MQTT
 
