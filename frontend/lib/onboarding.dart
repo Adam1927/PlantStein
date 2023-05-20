@@ -19,27 +19,29 @@ class OnboardingPage extends StatefulWidget {
 class _OnboardingPageState extends State<OnboardingPage> {
   late Material materialButton;
   late int index;
+
   final onboardingPagesList = [
-        PageModel(
+       PageModel(
       widget: DecoratedBox(
         decoration: const BoxDecoration(
-          color: const Color.fromARGB(255, 67, 94, 69)
+          color: Color.fromARGB(255, 67, 94, 69),
         ),
-        child: SingleChildScrollView(
-          controller: ScrollController(),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 45.0,
-                  vertical: 90.0,
-                ),
-                child: Image.asset('images/logo.png',
-                  width: 340,
-                  height: 340,
-                    ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: EdgeInsets.only(top:40.0),
+              child: Image.asset(
+                'images/logo.png',
+                fit: BoxFit.contain,
               ),
-              const Padding(
+              )
+            ),
+            const Expanded(
+              flex: 2,
+              child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 45.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
@@ -50,30 +52,32 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     ),
     PageModel(
       widget: DecoratedBox(
         decoration: const BoxDecoration(
-          color: const Color.fromARGB(255, 67, 94, 69),
+          color: Color.fromARGB(255, 67, 94, 69),
         ),
-        child: SingleChildScrollView(
-          controller: ScrollController(),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 45.0,
-                  vertical: 90.0,
-                ),
-                child: Image.asset('images/onboarding1_addroom.png',
-                    ),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: EdgeInsets.only(top:40.0),
+              child: Image.asset(
+                'images/onboarding1_addroom.png',
+                fit: BoxFit.contain,
+              ),)
+            ),
+            const Expanded(
+              flex: 2,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 45.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -83,29 +87,31 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     ),
     PageModel(
       widget: DecoratedBox(
         decoration: const BoxDecoration(
-          color: const Color.fromARGB(255, 67, 94, 69)
+          color: Color.fromARGB(255, 67, 94, 69),
         ),
-        child: SingleChildScrollView(
-          controller: ScrollController(),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 45.0,
-                  vertical: 90.0,
-                ),
-                child: Image.asset('images/onboarding2_addplant.png',
-                    ),
-              ),
-              const Padding(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: EdgeInsets.only(top:40.0),
+              child: Image.asset(
+                'images/onboarding2_addplant.png',
+                fit: BoxFit.contain,
+              ),)
+            ),
+            const Expanded(
+              flex: 2,
+              child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 45.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
@@ -116,29 +122,31 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     ),
     PageModel(
       widget: DecoratedBox(
         decoration: const BoxDecoration(
-          color: const Color.fromARGB(255, 67, 94, 69),
+          color: Color.fromARGB(255, 67, 94, 69),
         ),
-        child: SingleChildScrollView(
-          controller: ScrollController(),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 45.0,
-                  vertical: 90.0,
-                ),
-                child: Image.asset('images/onboarding3_checkstats.png',
-                    ),
-              ),
-              const Padding(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: EdgeInsets.only(top:40.0),
+              child: Image.asset(
+                'images/onboarding3_checkstats.png',
+                fit: BoxFit.contain,
+              ),)
+            ),
+            const Expanded(
+              flex: 2,
+              child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 45.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
@@ -149,8 +157,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     ),
@@ -230,7 +238,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             onTap: () {
                                Navigator.pushReplacement(
                                 context,
-                                  MaterialPageRoute(builder: (context) => RootPage()),
+                                  MaterialPageRoute(builder: (context) => const RootPage()),
                                 );
                             },
                             child: const Text(

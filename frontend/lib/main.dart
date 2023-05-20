@@ -5,8 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:onboarding/onboarding.dart';
 import 'package:plant_stein/plant_catalogue.dart';
 import 'package:plant_stein/pot_details_page.dart';
-import 'package:plant_stein/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'insert_test_data.dart';
 import 'onboarding.dart';
 import 'room_page.dart';
@@ -61,7 +61,7 @@ class _RootPageState extends State<RootPage> {
   int currentPage = 1;
 
   final screens = [
-    const Settings(),
+    
     const RoomPage(),
     const PlantCatalogue(),
   ];
@@ -80,8 +80,7 @@ class _RootPageState extends State<RootPage> {
           centerTitle: true,
           backgroundColor: const Color(0xFFEBEDEB),
         ),
-        body: 
-        screens[currentPage],
+        body: screens[currentPage],
         backgroundColor: const Color(0xFFEBEDEB),
         bottomNavigationBar: BottomNavigationBar(
           // currentIndex: currentPage,
@@ -90,6 +89,7 @@ class _RootPageState extends State<RootPage> {
               currentPage = index;
             })
           },
+
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: ImageIcon(AssetImage('images/settings.png'),
@@ -108,5 +108,5 @@ class _RootPageState extends State<RootPage> {
             ),
           ],
         ));
-  }
+  ;}
 }
