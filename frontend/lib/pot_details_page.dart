@@ -7,6 +7,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:plant_stein/statistics.dart';
 import 'plant_details.dart';
 import 'package:http/http.dart' as http;
 import 'package:plant_stein/plant_details.dart';
@@ -60,275 +61,300 @@ class _PotDetailsState extends State<PotDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: FutureBuilder<PlantDetails>(
-            future: plantDetails,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) return Container();
+      body: FutureBuilder<PlantDetails>(
+          future: plantDetails,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return Container();
 
-              PlantDetails plantDetails = snapshot.data!;
+            PlantDetails plantDetails = snapshot.data!;
 
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    AppBar(
-                      toolbarHeight: 100,
-                      title: Text(
-                        plantDetails.plantNickname,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.playfairDisplay(
-                            color: Colors.black,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold),
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  AppBar(
+                    toolbarHeight: 100,
+                    title: Text(
+                      plantDetails.plantNickname,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.playfairDisplay(
+                          color: Colors.black,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    iconTheme: const IconThemeData(color: Color(0xFF5F725F)),
+                    centerTitle: true,
+                    elevation: 0.0,
+                    backgroundColor: const Color(0xFFEBEDEB),
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 20.0),
+                        child: const Text('Soil Moisture'),
                       ),
-                      iconTheme: const IconThemeData(color: Color(0xFF5F725F)),
-                      centerTitle: true,
-                      elevation: 0.0,
-                      backgroundColor: const Color(0xFFEBEDEB),
-                      actions: [
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          color: const Color.fromARGB(255, 208, 48, 48),
-                          tooltip: "Delete pot",
-                          onPressed: () async {
-                            final result = await showDeleteConfirmationDialog(
-                                context, widget.potId);
-                            if (result == true) Navigator.pop(context);
-                          },
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(top: 20.0),
-                          child: const Text('Soil Moisture'),
+                      Container(
+                        margin: const EdgeInsets.only(top: 10.0, bottom: 20.0),
+                        height: 95.0,
+                        width: 300.0,
+                        padding: const EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF5F725F),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade600,
+                              spreadRadius: -1,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
                         ),
-                        Container(
-                          margin:
-                              const EdgeInsets.only(top: 10.0, bottom: 20.0),
-                          height: 95.0,
-                          width: 300.0,
-                          padding: const EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF5F725F),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade600,
-                                spreadRadius: -1,
-                                blurRadius: 5,
-                                offset: const Offset(0, 3),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              plantDetails.moisture == null
+                                  ? 'No data'
+                                  : "${plantDetails.moisture}",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.0,
                               ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                plantDetails.moisture == null
-                                    ? 'No data'
-                                    : "${plantDetails.moisture}",
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(top: 20.0),
-                          child: const Text('Room Temperature'),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 20.0),
+                        child: const Text('Room Temperature'),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 10.0, bottom: 20.0),
+                        height: 95.0,
+                        width: 300.0,
+                        padding: const EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF5F725F),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade600,
+                              spreadRadius: -1,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
                         ),
-                        Container(
-                          margin:
-                              const EdgeInsets.only(top: 10.0, bottom: 20.0),
-                          height: 95.0,
-                          width: 300.0,
-                          padding: const EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF5F725F),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade600,
-                                spreadRadius: -1,
-                                blurRadius: 5,
-                                offset: const Offset(0, 3),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              plantDetails.temperature == null
+                                  ? 'No data'
+                                  : '${plantDetails.temperature}°C\nCurrent',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.0,
                               ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                plantDetails.temperature == null
-                                    ? 'No data'
-                                    : '${plantDetails.temperature}°C\nCurrent',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.0,
-                                ),
+                            ),
+                            const SizedBox(
+                              width: 40.0,
+                            ),
+                            Text(
+                              '${plantDetails.perfectTemperature}°C\nPreferred',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.0,
                               ),
-                              const SizedBox(
-                                width: 40.0,
-                              ),
-                              Text(
-                                '${plantDetails.perfectTemperature}°C\nPreferred',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(top: 20.0),
-                          child: const Text('Room Humidity'),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 20.0),
+                        child: const Text('Room Humidity'),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 10.0, bottom: 20.0),
+                        height: 95.0,
+                        width: 300.0,
+                        padding: const EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF5F725F),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade600,
+                              spreadRadius: -1,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
                         ),
-                        Container(
-                          margin:
-                              const EdgeInsets.only(top: 10.0, bottom: 20.0),
-                          height: 95.0,
-                          width: 300.0,
-                          padding: const EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF5F725F),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade600,
-                                spreadRadius: -1,
-                                blurRadius: 5,
-                                offset: const Offset(0, 3),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              plantDetails.humidity == null
+                                  ? 'No data'
+                                  : '${plantDetails.humidity}%\nCurrent',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.0,
                               ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                plantDetails.humidity == null
-                                    ? 'No data'
-                                    : '${plantDetails.humidity}%\nCurrent',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.0,
-                                ),
+                            ),
+                            const SizedBox(
+                              width: 40.0,
+                            ),
+                            Text(
+                              '${plantDetails.perfectHumidity}%\nPreferred',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.0,
                               ),
-                              const SizedBox(
-                                width: 40.0,
-                              ),
-                              Text(
-                                '${plantDetails.perfectHumidity}%\nPreferred',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(top: 20.0),
-                          child: const Text('Light'),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 20.0),
+                        child: const Text('Light'),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 10.0, bottom: 20.0),
+                        height: 95.0,
+                        width: 300.0,
+                        padding: const EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF5F725F),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade600,
+                              spreadRadius: -1,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
                         ),
-                        Container(
-                          margin:
-                              const EdgeInsets.only(top: 10.0, bottom: 20.0),
-                          height: 95.0,
-                          width: 300.0,
-                          padding: const EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF5F725F),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade600,
-                                spreadRadius: -1,
-                                blurRadius: 5,
-                                offset: const Offset(0, 3),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              plantDetails.brightness == null
+                                  ? 'No data'
+                                  : '${plantDetails.brightness}\nCurrent',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.0,
                               ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                plantDetails.brightness == null
-                                    ? 'No data'
-                                    : '${plantDetails.brightness}\nCurrent',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.0,
-                                ),
+                            ),
+                            const SizedBox(
+                              width: 40.0,
+                            ),
+                            Text(
+                              '${plantDetails.perfectBrightness}\nPreferred',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.0,
                               ),
-                              const SizedBox(
-                                width: 40.0,
-                              ),
-                              Text(
-                                '${plantDetails.perfectBrightness}\nPreferred',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }),
+      floatingActionButton: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton.extended(
+                onPressed: () async {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Statistics()));
+                },
+                backgroundColor: const Color(0xFFA0AFA1),
+                label: const Text(
+                  "Statistics",
                 ),
-              );
-            }),
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            FloatingActionButton.extended(
-              onPressed: () async {
-                final result = await openEditPlantName(context, widget.potId);
-              },
-              backgroundColor: const Color(0xFFA0AFA1),
-              label: const Text("Edit Name"),
-              icon: const Icon(Icons.edit),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            FloatingActionButton.extended(
-              onPressed: () async {
-                final result = await openEditPlantRoom(context, widget.potId);
-              },
-              backgroundColor: const Color(0xFFA0AFA1),
-              label: const Text("Change Room"),
-              icon: const Icon(Icons.meeting_room),
-            ),
-            const SizedBox(
-              height: 10,
-            )
-          ],
-        ));
+                icon: const Icon(Icons.query_stats),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              FloatingActionButton.extended(
+                onPressed: () async {
+                  final result =
+                      await showDeleteConfirmationDialog(context, widget.potId);
+                  if (result == true) Navigator.pop(context);
+                },
+                backgroundColor: const Color(0xFFD38668),
+                label: const Text("Delete plant"),
+                icon: const Icon(Icons.delete),
+              ),
+              const SizedBox(
+                height: 10,
+              )
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton.extended(
+                onPressed: () async {
+                  final result = await openEditPlantName(context, widget.potId);
+                },
+                backgroundColor: const Color(0xFFA0AFA1),
+                label: const Text("Edit Name"),
+                icon: const Icon(Icons.edit),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              FloatingActionButton.extended(
+                onPressed: () async {
+                  final result = await openEditPlantRoom(context, widget.potId);
+                },
+                backgroundColor: const Color(0xFFA0AFA1),
+                label: const Text("Change Room"),
+                icon: const Icon(Icons.meeting_room),
+              ),
+              const SizedBox(
+                height: 10,
+              )
+            ],
+          )
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      resizeToAvoidBottomInset: false,
+    );
   }
 }
 
