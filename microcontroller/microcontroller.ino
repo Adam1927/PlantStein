@@ -15,7 +15,7 @@
 
 #define DHTTYPE DHT11
 #define DHTPIN D3
-DHT dht(DHTPIN, DHTTYPE); 
+DHT dht(DHTPIN, DHTTYPE);
 
 #define PLANT_ID 1
 #define CLIENT_ID "TEST_DEVICE"
