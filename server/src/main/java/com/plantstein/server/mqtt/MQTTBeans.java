@@ -132,6 +132,7 @@ public class MQTTBeans {
         messageHandler.setAsync(true);
         messageHandler.setDefaultTopic("#");
         messageHandler.setDefaultRetained(false);
+        messageHandler.setDefaultQos(0);
         return messageHandler;
     }
 
