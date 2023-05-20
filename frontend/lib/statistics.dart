@@ -16,83 +16,81 @@ class _StatisticsState extends State<Statistics> {
   @override
   Widget build(BuildContext context) {
     debugPrint("loading statistics for plant ");
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          AppBar(
-            title: Text(
-              'Statistics',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.playfairDisplay(
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 100,
+        title: Text(
+          'Statistics',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.playfairDisplay(
+              color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
+        ),
+        iconTheme: const IconThemeData(color: Color(0xFF5F725F)),
+        centerTitle: true,
+        elevation: 0.0,
+        backgroundColor: const Color(0xFFEBEDEB),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20.0,
+              ),
+              Text('Last 7 days'.toUpperCase(),
+                  style: GoogleFonts.playfairDisplay(
+                    color: const Color(0xFFCE9E8E),
+                    fontSize: 20,
+                  )),
+              const SizedBox(
+                height: 20.0,
+              ),
+              Text(
+                'Pot #',
+                style: GoogleFonts.playfairDisplay(
+                    color: const Color(0xFF474847),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 10.0,
+              ),
+              Text(
+                'Soil Moisture',
+                style: GoogleFonts.playfairDisplay(
                   color: const Color(0xFF474847),
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold),
-            ),
-            centerTitle: true,
-            elevation: 0.0,
-            backgroundColor: const Color(0xFFEBEDEB),
+                  fontSize: 20,
+                ),
+              ),
+              const MoistureChart(),
+              Text(
+                'Room Temperature',
+                style: GoogleFonts.playfairDisplay(
+                  color: const Color(0xFF474847),
+                  fontSize: 20,
+                ),
+              ),
+              const TemperatureChart(),
+              Text(
+                'Room Humidity',
+                style: GoogleFonts.playfairDisplay(
+                  color: const Color(0xFF474847),
+                  fontSize: 20,
+                ),
+              ),
+              const HumidityChart(),
+              Text(
+                'Lighting',
+                style: GoogleFonts.playfairDisplay(
+                  color: const Color(0xFF474847),
+                  fontSize: 20,
+                ),
+              ),
+              const LightChart(),
+            ],
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 40.0),
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 20.0,
-                ),
-                Text('Last 7 days'.toUpperCase(),
-                    style: GoogleFonts.playfairDisplay(
-                      color: const Color(0xFFCE9E8E),
-                      fontSize: 20,
-                    )),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                Text(
-                  'Pot #',
-                  style: GoogleFonts.playfairDisplay(
-                      color: const Color(0xFF474847),
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(
-                  height: 10.0,
-                ),
-                Text(
-                  'Soil Moisture',
-                  style: GoogleFonts.playfairDisplay(
-                    color: const Color(0xFF474847),
-                    fontSize: 20,
-                  ),
-                ),
-                const MoistureChart(),
-                Text(
-                  'Room Temperature',
-                  style: GoogleFonts.playfairDisplay(
-                    color: const Color(0xFF474847),
-                    fontSize: 20,
-                  ),
-                ),
-                const TemperatureChart(),
-                Text(
-                  'Room Humidity',
-                  style: GoogleFonts.playfairDisplay(
-                    color: const Color(0xFF474847),
-                    fontSize: 20,
-                  ),
-                ),
-                const HumidityChart(),
-                Text(
-                  'Lighting',
-                  style: GoogleFonts.playfairDisplay(
-                    color: const Color(0xFF474847),
-                    fontSize: 20,
-                  ),
-                ),
-                const LightChart(),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
