@@ -1,23 +1,30 @@
 class PlantDetails {
   final String plantNickname;
   final String? moisture;
+  final bool? moistureIsOk;
   final double? brightness;
   final double? perfectBrightness;
+  final bool? brightnessIsOk;
   final double? temperature;
   final double? perfectTemperature;
+  final bool? tempeartureIsOk;
   final double? humidity;
   final double? perfectHumidity;
+  final bool? humidityIsOk;
 
-  const PlantDetails({
-    required this.plantNickname,
-    this.brightness,
-    this.moisture,
-    this.temperature,
-    this.humidity,
-    this.perfectTemperature,
-    this.perfectHumidity,
-    this.perfectBrightness,
-  });
+  const PlantDetails(
+      {required this.plantNickname,
+      this.brightness,
+      this.moisture,
+      this.temperature,
+      this.humidity,
+      this.perfectTemperature,
+      this.perfectHumidity,
+      this.perfectBrightness,
+      this.brightnessIsOk,
+      this.humidityIsOk,
+      this.moistureIsOk,
+      this.tempeartureIsOk});
 
   factory PlantDetails.fromJson(Map<String, dynamic> json) {
     String moisture;
@@ -42,6 +49,10 @@ class PlantDetails {
       perfectTemperature: json['perfectTemperature'],
       perfectHumidity: json['perfectHumidity'],
       perfectBrightness: json['perfectBrightness'],
+      tempeartureIsOk: json['temperatureIsOk'],
+      humidityIsOk: json['humidityIsOk'],
+      brightnessIsOk: json['brightnessIsOk'],
+      moistureIsOk: json['moistureIsOk'],
       moisture: moisture,
     );
   }
