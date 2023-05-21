@@ -98,7 +98,9 @@ class _PotDetailsState extends State<PotDetails> {
                         width: 300.0,
                         padding: const EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF5F725F),
+                          color: plantDetails.moistureIsOk == true
+                              ? Color(0xFF5F725F)
+                              : Color(0xFFD38668),
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
@@ -139,7 +141,9 @@ class _PotDetailsState extends State<PotDetails> {
                         width: 300.0,
                         padding: const EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF5F725F),
+                          color: plantDetails.tempeartureIsOk == true
+                              ? Color(0xFF5F725F)
+                              : Color(0xFFD38668),
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
@@ -191,7 +195,9 @@ class _PotDetailsState extends State<PotDetails> {
                         width: 300.0,
                         padding: const EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF5F725F),
+                          color: plantDetails.humidityIsOk == true
+                              ? Color(0xFF5F725F)
+                              : Color(0xFFD38668),
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
@@ -243,7 +249,9 @@ class _PotDetailsState extends State<PotDetails> {
                         width: 300.0,
                         padding: const EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF5F725F),
+                          color: plantDetails.brightnessIsOk == true
+                              ? Color(0xFF5F725F)
+                              : Color(0xFFD38668),
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(

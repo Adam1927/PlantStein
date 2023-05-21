@@ -1,5 +1,6 @@
 package com.plantstein.server.rest;
 
+import com.plantstein.server.AppConfig;
 import com.plantstein.server.dto.NewPlantDTO;
 import com.plantstein.server.dto.PlantConditionDTO;
 import com.plantstein.server.dto.RoomConditionDTO;
@@ -9,13 +10,12 @@ import com.plantstein.server.repository.PlantRepository;
 import com.plantstein.server.repository.PlantTimeSeriesRepository;
 import com.plantstein.server.repository.RoomRepository;
 import com.plantstein.server.repository.SpeciesRepository;
+import com.plantstein.server.util.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -127,33 +127,32 @@ public class PlantRestController {
         RoomConditionDTO condition = roomRestController.getCondition(plant.getRoom().getId());
 
         List<PlantTimeSeries> plantRTSEntries = plantTimeSeriesRepository.findFirst3ByPlantIdOrderByTimestampDesc(id);
-        Moisture averageMoisture = Moisture.getAverageMoisture(
+        Moisture averageMoisture = plantRTSEntries.isEmpty() ? null : Moisture.getAverageMoisture(
                 plantRTSEntries.stream()
                         .map(PlantTimeSeries::getMoisture)
                         .toList()
         );
+
+        boolean brightnessIsOk = condition.getBrightness() == null ? false : Utils.checkWithinTargetValue(condition.getBrightness(), plant.getSpecies().getPerfectLight(), AppConfig.BRIGHTNESS_SLACK) == 0;
+        boolean temperatureIsOk = condition.getTemperature() == null ? false : Utils.checkWithinTargetValue(condition.getTemperature(), plant.getSpecies().getPerfectTemperature(), AppConfig.TEMPERATURE_SLACK) == 0;
+        boolean humidityIsOk = condition.getHumidity() == null ? false : Utils.checkWithinTargetValue(condition.getHumidity(), plant.getSpecies().getPerfectHumidity(), AppConfig.HUMIDITY_SLACK) == 0;
+        boolean moistureIsOk = averageMoisture == null ? false : averageMoisture.equals(Moisture.OKAY);
 
         return PlantConditionDTO.builder()
                 .plantId(id)
                 .plantNickname(plant.getNickname())
                 .temperature(condition.getTemperature())
                 .perfectTemperature(plant.getSpecies().getPerfectTemperature())
+                .temperatureIsOk(temperatureIsOk)
                 .humidity(condition.getHumidity())
                 .perfectHumidity(plant.getSpecies().getPerfectHumidity())
+                .humidityIsOk(humidityIsOk)
                 .brightness(condition.getBrightness())
                 .perfectBrightness(plant.getSpecies().getPerfectLight())
+                .brightnessIsOk(brightnessIsOk)
                 .moisture(averageMoisture)
+                .moistureIsOk(moistureIsOk)
                 .build();
     }
-
-    @Operation(summary = "Get condition over time")
-    @ApiResponse(responseCode = "200", description = "List of plant condition objects")
-    @ApiResponse(responseCode = "400", description = "Invalid number of days", content = @Content)
-    @ApiResponse(responseCode = "404", description = "Plant with that ID not found", content = @Content)
-    @GetMapping("/condition/{id}/{days}")
-    public List<PlantTimeSeries> getConditionOverTime(@PathVariable Long id, @Positive Integer days) {
-        throw new NotYetImplementedException();
-    }
-
 
 }

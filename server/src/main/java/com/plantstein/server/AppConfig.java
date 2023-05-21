@@ -20,9 +20,9 @@ public class AppConfig {
         }
     }
 
-    public static final double BRIGHTNESS_SLACK = 0.5;
+    public static final double BRIGHTNESS_SLACK = 250;
     public static final double TEMPERATURE_SLACK = 2.0;
-    public static final double HUMIDITY_SLACK = 5.0;
-    public static final int PLANT_CONDITION_PUBLISH_INTERVAL = 5000;
+    public static final double HUMIDITY_SLACK = 10;
+    public static final int PLANT_CONDITION_PUBLISH_INTERVAL = 3000;
 
 }
