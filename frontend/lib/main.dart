@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:plant_stein/loading_page.dart';
 import 'package:plant_stein/plant_catalogue.dart';
 import 'package:plant_stein/pot_details_page.dart';
 import 'insert_test_data.dart';
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
           future: setup(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return RootPage();
+              return SplashScreen();
             }
             return const Scaffold(
               body: Center(
