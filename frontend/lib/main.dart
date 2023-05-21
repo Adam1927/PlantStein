@@ -15,7 +15,7 @@ Future<void> setup() async {
   await dotenv.load(fileName: ".env");
 
   // if in debug mode, insert test data
-  if (kDebugMode) {
+  if (dotenv.env['TEST_DATA'] == 'true') {
     insertTestData();
   }
 }
