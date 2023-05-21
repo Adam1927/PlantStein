@@ -12,7 +12,6 @@ import 'insert_test_data.dart';
 import 'onboarding.dart';
 import 'room_page.dart';
 
-int? initScreen;
 Future<void> setup() async {
   await dotenv.load(fileName: ".env");
 
@@ -22,13 +21,8 @@ Future<void> setup() async {
   }
 }
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  initScreen = await prefs.getInt("initScreen");
-  await prefs.setInt("initScreen", 1);
-  print('initScreen ${initScreen}');
   runApp(MyApp());
 }
 
@@ -43,19 +37,9 @@ class MyApp extends StatelessWidget {
       home: FutureBuilder(
           future: setup(),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.connectionState == ConnectionState.done)
               return SplashScreen();
-            }
-            initialRoute:
-            initScreen == 0 || initScreen == null
-                ? "first"
-                : (context) => const OnboardingPage();
-
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
+            return Container();
           }),
     );
   }
