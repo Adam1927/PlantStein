@@ -1,16 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:onboarding/onboarding.dart';
 import 'package:plant_stein/loading_page.dart';
 import 'package:plant_stein/plant_catalogue.dart';
 import 'package:plant_stein/pot_details_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'insert_test_data.dart';
+import 'onboarding.dart';
 import 'room_page.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
+int? initScreen;
 Future<void> setup() async {
   await dotenv.load(fileName: ".env");
 
@@ -18,6 +20,16 @@ Future<void> setup() async {
   if (dotenv.env['TEST_DATA'] == 'true') {
     insertTestData();
   }
+}
+
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  initScreen = await prefs.getInt("initScreen");
+  await prefs.setInt("initScreen", 1);
+  print('initScreen ${initScreen}');
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -34,6 +46,11 @@ class MyApp extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.done) {
               return SplashScreen();
             }
+            initialRoute:
+            initScreen == 0 || initScreen == null
+                ? "first"
+                : (context) => const OnboardingPage();
+
             return const Scaffold(
               body: Center(
                 child: CircularProgressIndicator(),
@@ -83,6 +100,7 @@ class _RootPageState extends State<RootPage> {
               currentPage = index;
             })
           },
+
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: ImageIcon(AssetImage('images/home.png'),
@@ -96,5 +114,6 @@ class _RootPageState extends State<RootPage> {
             ),
           ],
         ));
+    ;
   }
 }
