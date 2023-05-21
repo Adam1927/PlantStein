@@ -14,7 +14,7 @@ end note
 component "Temperature & Humidity Sensor" as TemperatureHumiditySensor
 component "Moisture Sensor" as MoistureSensor
 component "Light Sensor" as LightSensor
-component "RGB LED" as RGBLED
+component "Speaker" as Speaker
 ' component "Speaker" as Speaker
 
 component Server
@@ -34,7 +34,7 @@ database Database
 TemperatureHumiditySensor --> Microcontroller : Sensor data
 MoistureSensor  --> Microcontroller : Sensor data
 LightSensor --> Microcontroller : Sensor data
-RGBLED <-- Microcontroller : Alert
+Speaker <-- Microcontroller : Alert
 ' Speaker <-- Microcontroller : Alert
 
 Microcontroller --> Server : Transmit sensor data over MQTT
