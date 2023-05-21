@@ -5,6 +5,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:plant_stein/main.dart';
+import 'package:plant_stein/onboarding.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -15,10 +17,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(
-        Duration(milliseconds: 2500),
-        () => Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => RootPage())));
+    Timer(Duration(milliseconds: 2500), () async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      int? initScreen = prefs.getInt("initScreen");
+
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (BuildContext context) =>
+              initScreen == 0 || initScreen == null
+                  ? const OnboardingPage()
+                  : const RootPage()));
+    });
   }
 
   @override

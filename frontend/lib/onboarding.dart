@@ -2,12 +2,10 @@
 //https://pub.dev/packages/onboarding/example
 //https://stackoverflow.com/questions/59241566/flutter-onboarding-screen-only-one-time
 
-
 import 'package:onboarding/onboarding.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_stein/main.dart';
-
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({Key? key}) : super(key: key);
@@ -21,7 +19,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   late int index;
 
   final onboardingPagesList = [
-       PageModel(
+    PageModel(
       widget: DecoratedBox(
         decoration: const BoxDecoration(
           color: Color.fromARGB(255, 67, 94, 69),
@@ -30,15 +28,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              flex: 4,
-              child: Padding(
-                padding: EdgeInsets.only(top:40.0),
-              child: Image.asset(
-                'images/logo.png',
-                fit: BoxFit.contain,
-              ),
-              )
-            ),
+                flex: 4,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 40.0),
+                  child: Image.asset(
+                    'images/logo.png',
+                    fit: BoxFit.contain,
+                  ),
+                )),
             const Expanded(
               flex: 2,
               child: Padding(
@@ -66,14 +63,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              flex: 4,
-              child: Padding(
-                padding: EdgeInsets.only(top:40.0),
-              child: Image.asset(
-                'images/onboarding1_addroom.png',
-                fit: BoxFit.contain,
-              ),)
-            ),
+                flex: 4,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 40.0),
+                  child: Image.asset(
+                    'images/onboarding1_addroom.png',
+                    fit: BoxFit.contain,
+                  ),
+                )),
             const Expanded(
               flex: 2,
               child: Padding(
@@ -101,14 +98,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              flex: 4,
-              child: Padding(
-                padding: EdgeInsets.only(top:40.0),
-              child: Image.asset(
-                'images/onboarding2_addplant.png',
-                fit: BoxFit.contain,
-              ),)
-            ),
+                flex: 4,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 40.0),
+                  child: Image.asset(
+                    'images/onboarding2_addplant.png',
+                    fit: BoxFit.contain,
+                  ),
+                )),
             const Expanded(
               flex: 2,
               child: Padding(
@@ -136,14 +133,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              flex: 4,
-              child: Padding(
-                padding: EdgeInsets.only(top:40.0),
-              child: Image.asset(
-                'images/onboarding3_checkstats.png',
-                fit: BoxFit.contain,
-              ),)
-            ),
+                flex: 4,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 40.0),
+                  child: Image.asset(
+                    'images/onboarding3_checkstats.png',
+                    fit: BoxFit.contain,
+                  ),
+                )),
             const Expanded(
               flex: 2,
               child: Padding(
@@ -169,6 +166,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
     super.initState();
     materialButton = _skipButton();
     index = 0;
+
+    () async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setInt("initScreen", 1);
+    }();
   }
 
   Material _skipButton({void Function(int)? setIndex}) {
@@ -193,7 +195,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -224,31 +225,31 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CustomIndicator(
-                        netDragPercent: dragDistance,
-                        pagesLength: pagesLength,
-                      indicator: Indicator(
-                        indicatorDesign: IndicatorDesign.line(
-                            lineDesign: LineDesign(
-                              lineType: DesignType.line_uniform,
-                            ),
-                          ),
-                        )
-                      ),
-                      InkWell(
-                            onTap: () {
-                               Navigator.pushReplacement(
-                                context,
-                                  MaterialPageRoute(builder: (context) => const RootPage()),
-                                );
-                            },
-                            child: const Text(
-                              'Skip',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.0,
+                          netDragPercent: dragDistance,
+                          pagesLength: pagesLength,
+                          indicator: Indicator(
+                            indicatorDesign: IndicatorDesign.line(
+                              lineDesign: LineDesign(
+                                lineType: DesignType.line_uniform,
                               ),
                             ),
+                          )),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const RootPage()),
+                          );
+                        },
+                        child: const Text(
+                          'Skip',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
                           ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
