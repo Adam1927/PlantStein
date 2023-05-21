@@ -2,6 +2,9 @@
 
 <img src="logo.png" width="60%">
 
+## Video Demo
+The video demo can be found [here](https://youtu.be/jHRoAGf7i0E).
+
 ## Purpose and Benefits
 The goal of this project is to create an app that would simplify the life of any and all plant lovers out there. Our app, PlantStein, aims to help the user keep track of their plants well-being by monitoring the plants' environments. This includes keeping an eye on the room temperature and humidity around the plant, the amount of light the plant receives and the moisture level of its soil. The application will warn the user, whenever one of their plants is in a risk zone, by alerting them in app and by a notification by speaker.
 
