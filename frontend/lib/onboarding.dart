@@ -179,8 +179,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
         borderRadius: defaultSkipButtonBorderRadius,
         onTap: () {
           if (setIndex != null) {
-            index = 2;
-            setIndex(2);
+            index = 1;
+            setIndex(1);
           }
         },
         child: const Padding(

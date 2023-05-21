@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:onboarding/onboarding.dart';
+import 'package:plant_stein/loading_page.dart';
 import 'package:plant_stein/plant_catalogue.dart';
 import 'package:plant_stein/pot_details_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +13,15 @@ import 'onboarding.dart';
 import 'room_page.dart';
 
 int? initScreen;
+Future<void> setup() async {
+  await dotenv.load(fileName: ".env");
+
+  // if in debug mode, insert test data
+  if (kDebugMode) {
+    insertTestData();
+  }
+}
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +31,7 @@ Future<void> main() async {
   print('initScreen ${initScreen}');
   runApp(MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -29,12 +40,23 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.green),
-      initialRoute: initScreen == 0 || initScreen == null ? "first" : "/",
-      routes: {
-        '/': (context) => RootPage(
-            ),
-        "first": (context) => OnboardingPage(),
-      },
+      home: FutureBuilder(
+          future: setup(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return SplashScreen();
+            }
+            initialRoute:
+            initScreen == 0 || initScreen == null
+                ? "first"
+                : (context) => const OnboardingPage();
+
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }),
     );
   }
 }
@@ -92,5 +114,6 @@ class _RootPageState extends State<RootPage> {
             ),
           ],
         ));
-  ;}
+    ;
+  }
 }
