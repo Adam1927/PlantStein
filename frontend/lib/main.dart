@@ -21,22 +21,11 @@ Future<void> main() async {
   print('initScreen ${initScreen}');
   runApp(MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    () async {
-      await dotenv.load(fileName: ".env");
-
-      if (kDebugMode) {
-        insertTestData();
-      }
-    }();
-
-    // If in debug mode then insert test data
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.green),
@@ -58,12 +47,11 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
-  int currentPage = 1;
+  int currentPage = 0;
 
   final screens = [
-    
-    const RoomPage(),
-    const PlantCatalogue(),
+    RoomPage(),
+    PlantCatalogue(),
   ];
 
   @override
@@ -71,7 +59,7 @@ class _RootPageState extends State<RootPage> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0.0,
-          toolbarHeight: 150,
+          toolbarHeight: 100,
           title: Image.asset(
             'images/logo.png',
             fit: BoxFit.contain,
@@ -80,6 +68,7 @@ class _RootPageState extends State<RootPage> {
           centerTitle: true,
           backgroundColor: const Color(0xFFEBEDEB),
         ),
+        // body: const PotDetails(1)
         body: screens[currentPage],
         backgroundColor: const Color(0xFFEBEDEB),
         bottomNavigationBar: BottomNavigationBar(
@@ -91,11 +80,6 @@ class _RootPageState extends State<RootPage> {
           },
 
           items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('images/settings.png'),
-                  color: Color(0xFF5F725F)),
-              label: '',
-            ),
             BottomNavigationBarItem(
               icon: ImageIcon(AssetImage('images/home.png'),
                   color: Color(0xFF5F725F)),

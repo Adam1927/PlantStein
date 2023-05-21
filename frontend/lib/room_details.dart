@@ -81,7 +81,8 @@ class _RoomDetailsState extends State<RoomDetails> {
     return IconButton(
       onPressed: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => PotDetails(potId)));
+                MaterialPageRoute(builder: (context) => PotDetails(potId)))
+            .then((value) => loadPots(widget.roomId));
       },
       icon: Image.asset(
         'images/pot.png',
@@ -184,8 +185,12 @@ class _RoomDetailsState extends State<RoomDetails> {
               debugPrint(response.statusCode.toString());
               if (response.statusCode == 201) {
                 int potId = json.decode(response.body)["id"];
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PotDetails(potId)));
+                Navigator.of(context).pop();
+                Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PotDetails(potId)))
+                    .then((_) => loadPots(widget.roomId));
               } else {
                 Navigator.of(context).pop();
               }

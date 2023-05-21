@@ -47,33 +47,47 @@ class SpeciesDetailsPage extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 20),
                       Text(
                         'Height: ${species.maxHeight}',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        style: GoogleFonts.playfairDisplay(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),
                       ),
                       const SizedBox(height: 10),
                       Text(
                         'Botanical name: ${species.botanicalName}',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        style: GoogleFonts.playfairDisplay(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),
                       ),
                       const SizedBox(height: 10),
                       Text(
                         'Homeland: ${species.homeland}',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        style: GoogleFonts.playfairDisplay(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),
                       ),
                       const SizedBox(height: 10),
                       Text(
                         'Bloom time: ${species.bloomTime}',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        style: GoogleFonts.playfairDisplay(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
                       ),
                       Row(
                         children: [
                           Image.asset(
                             'images/leaf1.png',
-                            width: 70,
-                            height: 70,
+                            width: 80,
+                            height: 80,
                           ),
                         ],
                       ),
@@ -103,7 +117,7 @@ class SpeciesDetailsPage extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 20),
+              padding: const EdgeInsets.only(bottom: 10),
               child: Image.asset(
                 'images/friendly_plant.png',
                 fit: BoxFit.cover,
@@ -115,30 +129,42 @@ class SpeciesDetailsPage extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(width: 20),
+                const SizedBox(width: 50),
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(height: 20),
+                      SizedBox(height: 50),
                       Text(
                         'Perfect temperature: ${species.perfectTemperature}',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        style: GoogleFonts.playfairDisplay(
+                          color: Colors.black,
+                          fontSize: 20,
+                        ),
                       ),
                       SizedBox(height: 10),
                       Text(
                         'Perfect humidity: ${species.perfectHumidity}',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        style: GoogleFonts.playfairDisplay(
+                          color: Colors.black,
+                          fontSize: 20,
+                        ),
                       ),
                       SizedBox(height: 10),
                       Text(
                         'Perfect moisture: ${species.perfectMoisture}',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        style: GoogleFonts.playfairDisplay(
+                          color: Colors.black,
+                          fontSize: 20,
+                        ),
                       ),
                       SizedBox(height: 10),
                       Text(
                         'Perfect light: ${species.perfectLight}',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        style: GoogleFonts.playfairDisplay(
+                          color: Colors.black,
+                          fontSize: 20,
+                        ),
                       ),
                     ],
                   ),
@@ -146,8 +172,8 @@ class SpeciesDetailsPage extends StatelessWidget {
                 const SizedBox(width: 20),
                 Image.asset(
                   'images/leaf1inverted.png',
-                  width: 70,
-                  height: 70,
+                  width: 100,
+                  height: 100,
                 ),
               ],
             ),

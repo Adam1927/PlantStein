@@ -10,6 +10,7 @@ import com.plantstein.server.model.RoomTimeSeries;
 import com.plantstein.server.repository.PlantRepository;
 import com.plantstein.server.repository.RoomRepository;
 import com.plantstein.server.repository.RoomTimeSeriesRepository;
+import com.plantstein.server.util.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -93,22 +94,24 @@ public class RoomRestController {
         roomRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Room with ID " + id + " does not exist"));
 
-        List<RoomTimeSeries> rtsEntries = roomTimeSeriesRepository.findFirst10ByRoomIdOrderByTimestampDesc(id);
+        List<RoomTimeSeries> rtsEntries = roomTimeSeriesRepository.findFirst3ByRoomIdOrderByTimestampDesc(id);
 
-        double avgBrightness = rtsEntries.stream()
+        if (rtsEntries.isEmpty()) return new RoomConditionDTO();
+
+        Double avgBrightness = rtsEntries.stream()
                 .mapToDouble(RoomTimeSeries::getBrightness)
                 .average().orElse(0);
-        double avgTemperature = rtsEntries.stream()
-                .mapToDouble(RoomTimeSeries::getBrightness)
+        Double avgTemperature = rtsEntries.stream()
+                .mapToDouble(RoomTimeSeries::getTemperature)
                 .average().orElse(0);
-        double avgHumidity = rtsEntries.stream()
-                .mapToDouble(RoomTimeSeries::getBrightness)
+        Double avgHumidity = rtsEntries.stream()
+                .mapToDouble(RoomTimeSeries::getHumidity)
                 .average().orElse(0);
 
         return RoomConditionDTO.builder()
-                .brightness(avgBrightness)
-                .temperature(avgTemperature)
-                .humidity(avgHumidity)
+                .temperature(Utils.roundToDecimalPlaces(avgTemperature, 2))
+                .humidity(Utils.roundToDecimalPlaces(avgHumidity, 2))
+                .brightness(Utils.roundToDecimalPlaces(avgBrightness, 2))
                 .build();
 
     }
